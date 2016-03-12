@@ -16,8 +16,7 @@
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
-LOCAL_PREBUILT_JAVA_LIBRARIES := \
+LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES := \
     jacocoagent:org.jacoco.agent.rt-0.7.5.201505241946-all$(COMMON_JAVA_PACKAGE_SUFFIX)
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_MULTI_PREBUILT)
-
