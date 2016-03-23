@@ -121,7 +121,9 @@ public class Agent implements IAgent {
 			output = createAgentOutput();
 			output.startup(options, data);
 			if (options.getJmx()) {
-				jmxRegistration = new JmxRegistration(this);
+// BEGIN android-change
+//				jmxRegistration = new JmxRegistration(this);
+// END android-change
 			}
 		} catch (final Exception e) {
 			logger.logExeption(e);
