@@ -1,13 +1,7 @@
-The jacocoagent.jar is updated in the following way:
+The ASM jar required by jacoco is updated in the following way:
 
-mvn install
-rm -f jacocoagent.jar
-cp org.jacoco.agent.rt/target/org.jacoco.agent.rt-0.7.5.201505241946-all.jar jacocoagent.jar
+mvn -f org.jacoco.agent.rt/pom.xml dependency:copy-dependencies
+cp org.jacoco.agent.rt/target/dependency/asm-debug-all-5.0.1.jar ./
 mvn clean
 
 The Android.mk must be updated to reference the right prebuilt.
-
-Also, the config.mk file must be updated to indicate what is the internal package name
-containing the core classes of Jacoco (org.jacoco.agent.rt.internal_*)
-Note: this information is available in the static field RUNTIMEPACKAGE
-of the org.jacoco.core.JaCoCo class (http://eclemma.org/jacoco/trunk/doc/api/org/jacoco/core/JaCoCo.html#RUNTIMEPACKAGE)
