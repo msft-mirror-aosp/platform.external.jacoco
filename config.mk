@@ -12,5 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-JACOCO_PACKAGE_NAME := org.jacoco.agent.rt.internal_d695e14
+JACOCO_PACKAGE_NAME := org.jacoco.agent.rt.internal
 
