@@ -116,7 +116,7 @@ public final class Rule {
 	}
 
 	boolean matches(final String name) {
-		return includesMatcher.matches(name) && !excludesMatcher.matches(name);
+		return includesMatcher.apply(name) && !excludesMatcher.apply(name);
 	}
 
 }
