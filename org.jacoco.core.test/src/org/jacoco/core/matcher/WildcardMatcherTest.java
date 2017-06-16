@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.runtime;
+package org.jacoco.core.matcher;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
