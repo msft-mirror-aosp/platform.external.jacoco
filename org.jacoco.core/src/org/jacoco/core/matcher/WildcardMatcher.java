@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Multiple expressions can be separated with a colon (:). In this case the
  * expression matches if at least one part matches.
  */
-public class WildcardMatcher {
+public class WildcardMatcher implements Predicate<String> {
 
 	private final Pattern pattern;
 
@@ -67,7 +67,8 @@ public class WildcardMatcher {
 	 *            string to test
 	 * @return <code>true</code>, if the expression matches
 	 */
-	public boolean matches(final String s) {
+	@Override
+	public boolean apply(final String s) {
 		return pattern.matcher(s).matches();
 	}
 
