@@ -120,14 +120,16 @@ public class CoverageTransformer implements ClassFileTransformer {
 			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
 				return false;
 			}
-			if (exclClassloader.apply(loader.getClass().getName())) {
+			if (exclClassloader.matches(loader.getClass().getName())) {
 				return false;
 			}
 		}
 
 		return !classname.startsWith(AGENT_PREFIX) &&
-				includes.apply(classname) &&
-				!excludes.apply(classname);
+
+		includes.matches(classname) &&
+
+		!excludes.matches(classname);
 	}
 
 	/**
