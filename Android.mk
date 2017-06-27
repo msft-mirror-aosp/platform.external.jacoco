@@ -68,6 +68,13 @@ LOCAL_STATIC_JAVA_LIBRARIES := jacoco-asm-host args4j-2.0.28
 
 include $(BUILD_HOST_JAVA_LIBRARY)
 
+# include jacoco-cli in the dist directory to enable running it to generate a code-coverage report
+ifeq ($(ANDROID_COMPILE_WITH_JACK),false)
+ifeq ($(EMMA_INSTRUMENT),true)
+$(call dist-for-goals, dist_files, $(LOCAL_INSTALLED_MODULE))
+endif
+endif
+
 
 #
 # Build asm-5.0.1 as a static library for the device
