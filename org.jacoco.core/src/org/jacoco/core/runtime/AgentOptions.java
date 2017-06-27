@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
-import org.jacoco.core.matcher.WildcardMatcher;
 
 /**
  * Utility to create and parse options for the runtime agent. Options are
