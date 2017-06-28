@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jacoco.core.analysis.ICoverageNode.ElementType;
-import org.jacoco.core.matcher.WildcardMatcher;
+import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
  * A rule applies for a certain element type and can define any number of limits
@@ -116,7 +116,7 @@ public final class Rule {
 	}
 
 	boolean matches(final String name) {
-		return includesMatcher.apply(name) && !excludesMatcher.apply(name);
+		return includesMatcher.matches(name) && !excludesMatcher.matches(name);
 	}
 
 }

@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.matcher;
+package org.jacoco.core.runtime;
 
 import java.util.regex.Pattern;
 
@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Multiple expressions can be separated with a colon (:). In this case the
  * expression matches if at least one part matches.
  */
-public class WildcardMatcher implements Predicate<String> {
+public class WildcardMatcher {
 
 	private final Pattern pattern;
 
@@ -67,8 +67,7 @@ public class WildcardMatcher implements Predicate<String> {
 	 *            string to test
 	 * @return <code>true</code>, if the expression matches
 	 */
-	@Override
-	public boolean apply(final String s) {
+	public boolean matches(final String s) {
 		return pattern.matcher(s).matches();
 	}
 

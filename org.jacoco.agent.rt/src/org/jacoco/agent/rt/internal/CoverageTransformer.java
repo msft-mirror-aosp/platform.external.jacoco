@@ -19,7 +19,7 @@ import java.security.ProtectionDomain;
 import org.jacoco.core.instr.Instrumenter;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.IRuntime;
-import org.jacoco.core.matcher.WildcardMatcher;
+import org.jacoco.core.runtime.WildcardMatcher;
 
 /**
  * Class file transformer to instrument classes for code coverage analysis.
@@ -120,14 +120,16 @@ public class CoverageTransformer implements ClassFileTransformer {
 			if (!inclNoLocationClasses && !hasSourceLocation(protectionDomain)) {
 				return false;
 			}
-			if (exclClassloader.apply(loader.getClass().getName())) {
+			if (exclClassloader.matches(loader.getClass().getName())) {
 				return false;
 			}
 		}
 
 		return !classname.startsWith(AGENT_PREFIX) &&
-				includes.apply(classname) &&
-				!excludes.apply(classname);
+
+		includes.matches(classname) &&
+
+		!excludes.matches(classname);
 	}
 
 	/**
