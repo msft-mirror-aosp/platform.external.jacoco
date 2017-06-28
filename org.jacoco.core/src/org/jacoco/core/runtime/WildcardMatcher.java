@@ -9,7 +9,7 @@
  *    Marc R. Hoffmann - initial API and implementation
  *    
  *******************************************************************************/
-package org.jacoco.core.matcher;
+package org.jacoco.core.runtime;
 
 import java.util.regex.Pattern;
 
