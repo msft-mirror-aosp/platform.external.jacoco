@@ -30,7 +30,7 @@ jacoco_android_exclude_list = [
 //
 // Note: this is only intended to be used for the platform development. This is *not* intended
 // to be used in the SDK where apps can use the official jacoco release.
-java_library_static {
+java_library {
     name: "jacocoagent",
 
     srcs: [
