@@ -17,5 +17,5 @@ LOCAL_PATH := $(call my-dir)
 
 # include jacoco-cli in the dist directory to enable running it to generate a code-coverage report
 ifeq ($(EMMA_INSTRUMENT),true)
-$(call dist-for-goals, dist_files, $(HOST_OUT_JAVA_LIBRARIES)/jacoco-cli.jar)
+$(call dist-for-goals, dist_files apps_only, $(HOST_OUT_JAVA_LIBRARIES)/jacoco-cli.jar)
 endif
