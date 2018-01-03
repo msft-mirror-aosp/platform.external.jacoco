@@ -82,16 +82,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.cli</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>org.jacoco.cli.test</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>org.jacoco.examples</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -162,7 +152,6 @@
                   <fileset dir="../org.jacoco.agent.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.agent.rt.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.ant.test/target" includes="surefire-reports/**/*.xml"/>
-                  <fileset dir="../org.jacoco.cli.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.core.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.report.test/target" includes="surefire-reports/**/*.xml"/>
                   <fileset dir="../org.jacoco.examples.test/target" includes="surefire-reports/**/*.xml"/>
@@ -241,7 +230,7 @@
         <artifactId>xml-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>transform-generated-doc</id>
+            <id>default-transform</id>
             <goals>
               <goal>transform</goal>
             </goals>
@@ -253,32 +242,6 @@
                     <include>*.xml</include>
                   </includes>
                   <stylesheet>xsl/maven-goal.xsl</stylesheet>
-                  <fileMappers>
-                    <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-                      <targetExtension>.html</targetExtension>
-                    </fileMapper>
-                  </fileMappers>
-                  <parameters>
-                    <parameter>
-                      <name>qualified.bundle.version</name>
-                      <value>${qualified.bundle.version}</value>
-                    </parameter>
-                    <parameter>
-                      <name>jacoco.home.url</name>
-                      <value>${jacoco.home.url}</value>
-                    </parameter>
-                    <parameter>
-                      <name>copyright.years</name>
-                      <value>${copyright.years}</value>
-                    </parameter>
-                  </parameters>
-                </transformationSet>
-                <transformationSet>
-                  <dir>../org.jacoco.cli/target/generated-documentation</dir>
-                  <includes>
-                    <include>*.xml</include>
-                  </includes>
-                  <stylesheet>xsl/cli.xsl</stylesheet>
                   <fileMappers>
                     <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
                       <targetExtension>.html</targetExtension>
