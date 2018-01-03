@@ -65,14 +65,6 @@
     </dependencySet>
     <dependencySet>
       <outputDirectory>lib</outputDirectory>
-      <outputFileNameMapping>jacococli.jar</outputFileNameMapping>
-      <useProjectArtifact>false</useProjectArtifact>
-      <includes>
-        <include>${project.groupId}:org.jacoco.cli:jar:nodeps</include>
-      </includes>
-    </dependencySet>
-    <dependencySet>
-      <outputDirectory>lib</outputDirectory>
       <outputFileNameMapping>jacocoagent.jar</outputFileNameMapping>
       <useProjectArtifact>false</useProjectArtifact>
       <includes>
