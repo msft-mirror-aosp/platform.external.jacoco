@@ -36,7 +36,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.jacoco.core.data.ExecutionDataStore;
-import org.jacoco.core.internal.Java9Support;
 import org.jacoco.core.internal.data.CRC64;
 import org.jacoco.core.test.TargetLoader;
 import org.junit.Before;
@@ -93,8 +92,8 @@ public class AnalyzerTest {
 	@Test
 	public void testAnalyzeClassIdMatch() throws IOException {
 		// class IDs are always calculated after downgrade of the version
-		final byte[] bytes = Java9Support.downgradeIfRequired(
-				TargetLoader.getClassDataAsBytes(AnalyzerTest.class));
+		final byte[] bytes = TargetLoader
+				.getClassDataAsBytes(AnalyzerTest.class);
 		executionData.get(Long.valueOf(CRC64.checksum(bytes)),
 				"org/jacoco/core/analysis/AnalyzerTest", 200);
 		analyzer.analyzeClass(bytes, "Test");
@@ -122,6 +121,27 @@ public class AnalyzerTest {
 			fail("expected exception");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing Broken.class.", e.getMessage());
+		}
+	}
+
+	private static class BrokenInputStream extends InputStream {
+		@Override
+		public int read() throws IOException {
+			throw new IOException();
+		}
+	}
+
+	/**
+	 * Triggers exception in
+	 * {@link Analyzer#analyzeClass(InputStream, String)}.
+	 */
+	@Test
+	public void testAnalyzeClass_BrokenStream() throws IOException {
+		try {
+			analyzer.analyzeClass(new BrokenInputStream(), "BrokenStream");
+			fail("exception expected");
+		} catch (IOException e) {
+			assertEquals("Error while analyzing BrokenStream.", e.getMessage());
 		}
 	}
 
@@ -165,12 +185,7 @@ public class AnalyzerTest {
 	@Test
 	public void testAnalyzeAll_Broken() throws IOException {
 		try {
-			analyzer.analyzeAll(new InputStream() {
-				@Override
-				public int read() throws IOException {
-					throw new IOException();
-				}
-			}, "Test");
+			analyzer.analyzeAll(new BrokenInputStream(), "Test");
 			fail("expected exception");
 		} catch (IOException e) {
 			assertEquals("Error while analyzing Test.", e.getMessage());

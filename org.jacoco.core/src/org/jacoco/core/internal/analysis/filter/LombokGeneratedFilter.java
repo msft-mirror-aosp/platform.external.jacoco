@@ -19,26 +19,18 @@ import org.objectweb.asm.tree.MethodNode;
 /**
  * Filters methods annotated with <code>@lombok.Generated</code>.
  */
-public class LombokGeneratedFilter implements IFilter {
+public final class LombokGeneratedFilter extends AbstractAnnotatedMethodFilter {
 
-	public void filter(final String className, final String superClassName,
-			final MethodNode methodNode, final IFilterOutput output) {
-		if (hasLombokGeneratedAnnotation(methodNode)) {
-			output.ignore(methodNode.instructions.getFirst(),
-					methodNode.instructions.getLast());
-		}
+	/**
+	 * New filter.
+	 */
+	public LombokGeneratedFilter() {
+		super("lombok/Generated");
 	}
 
-	private boolean hasLombokGeneratedAnnotation(final MethodNode methodNode) {
-		final List<AnnotationNode> runtimeInvisibleAnnotations = methodNode.invisibleAnnotations;
-		if (runtimeInvisibleAnnotations != null) {
-			for (final AnnotationNode annotation : runtimeInvisibleAnnotations) {
-				if ("Llombok/Generated;".equals(annotation.desc)) {
-					return true;
-				}
-			}
-		}
-		return false;
+	@Override
+	List<AnnotationNode> getAnnotations(final MethodNode methodNode) {
+		return methodNode.invisibleAnnotations;
 	}
 
 }
