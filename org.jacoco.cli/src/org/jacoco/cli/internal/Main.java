@@ -55,7 +55,7 @@ public class Main extends Command {
 
 	@Override
 	public String usage(final CommandParser parser) {
-		return JAVACMD + "-help | <command>";
+		return JAVACMD + "--help | <command>";
 	}
 
 	@Override
@@ -66,9 +66,9 @@ public class Main extends Command {
 		try {
 			mainParser.parseArgument(args);
 		} catch (final CmdLineException e) {
-			err.println(e.getMessage());
-			err.println();
 			((CommandParser) e.getParser()).getCommand().printHelp(err);
+			err.println();
+			err.println(e.getMessage());
 			return -1;
 		}
 
@@ -99,8 +99,10 @@ public class Main extends Command {
 	 *             on the console
 	 */
 	public static void main(final String... args) throws Exception {
-		new Main(args).execute(new PrintWriter(System.out, true),
-				new PrintWriter(System.err, true));
+		final PrintWriter out = new PrintWriter(System.out, true);
+		final PrintWriter err = new PrintWriter(System.err, true);
+		final int returncode = new Main(args).execute(out, err);
+		System.exit(returncode);
 	}
 
 }

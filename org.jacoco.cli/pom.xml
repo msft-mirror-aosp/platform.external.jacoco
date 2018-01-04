@@ -73,9 +73,30 @@
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <shadedClassifierName>nodeps</shadedClassifierName>
               <minimizeJar>true</minimizeJar>
+              <relocations>
+                <relocation>
+                  <pattern>org.objectweb.asm</pattern>
+                  <shadedPattern>org.jacoco.cli.internal.asm</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.kohsuke.args4j</pattern>
+                  <shadedPattern>org.jacoco.cli.internal.args4j</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.jacoco.core</pattern>
+                  <shadedPattern>org.jacoco.cli.internal.core</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.jacoco.report</pattern>
+                  <shadedPattern>org.jacoco.cli.internal.report</shadedPattern>
+                </relocation>
+              </relocations>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
+                    <Implementation-Title>${project.description}</Implementation-Title>
+                    <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+                    <Implementation-Version>${project.version}</Implementation-Version>
                     <Main-Class>org.jacoco.cli.internal.Main</Main-Class>
                   </manifestEntries>
                 </transformer>

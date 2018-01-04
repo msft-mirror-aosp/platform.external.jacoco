@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,8 +43,20 @@ public class MergeTest extends CommandTestBase {
 		execute("merge");
 
 		assertFailure();
-		assertContains("Option \"-destfile\" is required", err);
+		assertContains("Option \"--destfile\" is required", err);
 		assertContains("java -jar jacococli.jar merge [<execfiles> ...]", err);
+	}
+
+	@Test
+	public void should_print_warning_when_no_exec_files_are_provided()
+			throws Exception {
+		File dest = new File(tmp.getRoot(), "merged.exec");
+		execute("merge", "--destfile", dest.getAbsolutePath());
+
+		assertOk();
+		assertContains("[WARN] No execution data files provided.", out);
+		Set<String> names = loadExecFile(dest);
+		assertEquals(Collections.emptySet(), names);
 	}
 
 	@Test
@@ -53,7 +66,7 @@ public class MergeTest extends CommandTestBase {
 		File c = createExecFile("c");
 		File dest = new File(tmp.getRoot(), "merged.exec");
 
-		execute("merge", "-destfile", dest.getAbsolutePath(),
+		execute("merge", "--destfile", dest.getAbsolutePath(),
 				a.getAbsolutePath(), b.getAbsolutePath(), c.getAbsolutePath());
 
 		assertOk();
