@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2017 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -209,6 +209,19 @@ public class ProbeArrayStrategyFactoryTest {
 
 		strategy.storeInstance(cv.visitMethod(0, "<clinit>", null, null, null),
 				true, 0);
+	}
+
+	@Test
+	public void testModule() {
+		final ClassWriter writer = new ClassWriter(0);
+		writer.visit(Opcodes.V9, Opcodes.ACC_MODULE, "module-info", null, null,
+				null);
+		writer.visitModule("module", 0, null).visitEnd();
+		writer.visitEnd();
+
+		final IProbeArrayStrategy strategy = ProbeArrayStrategyFactory
+				.createFor(new ClassReader(writer.toByteArray()), generator);
+		assertEquals(NoneProbeArrayStrategy.class, strategy.getClass());
 	}
 
 	private IProbeArrayStrategy test(int version, int access, boolean clinit,
