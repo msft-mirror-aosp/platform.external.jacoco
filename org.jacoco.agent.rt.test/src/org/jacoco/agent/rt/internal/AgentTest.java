@@ -37,6 +37,7 @@ import org.jacoco.core.runtime.AgentOptions.OutputMode;
 import org.jacoco.core.runtime.RuntimeData;
 import org.jacoco.core.tools.ExecFileLoader;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -132,6 +133,9 @@ public class AgentTest implements IExceptionLogger, IAgentOutput {
 	}
 
 	@Test
+	// BEGIN android-change
+	@Ignore
+	// END android-change
 	public void startup_should_register_mbean_when_enabled() throws Exception {
 		options.setJmx(true);
 		Agent agent = createAgent();
