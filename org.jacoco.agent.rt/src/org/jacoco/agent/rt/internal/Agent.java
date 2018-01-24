@@ -82,6 +82,8 @@ public class Agent implements IAgent {
 	/**
 	 * Returns a global instance which is already started. If an agent has not
 	 * been initialized then one will be created via {@link Offline#createAgent()}.
+	 * This will capture any data written via {@link Offline#getProbes} prior to
+	 * this call, but not subsequently.
 	 * 
 	 * @return global instance
 	 * @throws IllegalStateException
