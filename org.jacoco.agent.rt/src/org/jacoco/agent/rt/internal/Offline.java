@@ -13,6 +13,7 @@ package org.jacoco.agent.rt.internal;
 
 import java.util.Properties;
 
+import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
@@ -22,13 +23,19 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 public final class Offline {
 
-	private static final RuntimeData DATA;
+	// BEGIN android-change
+	// private static final RuntimeData DATA;
+	private static final ExecutionDataStore DATA;
+	// END android-change
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
 	static {
-		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
-				System.getProperties());
-		DATA = Agent.getInstance(new AgentOptions(config)).getData();
+		// BEGIN android-change
+		// final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+		//		System.getProperties());
+		// DATA = Agent.getInstance(new AgentOptions(config)).getData();
+		DATA = new ExecutionDataStore();
+		// END android-change
 	}
 
 	private Offline() {
@@ -48,8 +55,27 @@ public final class Offline {
 	 */
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
-		return DATA.getExecutionData(Long.valueOf(classid), classname,
-				probecount).getProbes();
+		// BEGIN android-change
+		// return DATA.getExecutionData(Long.valueOf(classid), classname,
+		//		probecount).getProbes();
+		synchronized (DATA) {
+			return DATA.get(classid, classname, probecount).getProbes();
+		}
+		// END android-change
 	}
 
+	// BEGIN android-change
+	/**
+	 * Creates a default agent, using config loaded from the classpath resource and the system
+	 * properties, and a runtime data instance populated with the execution data accumulated by
+	 * the probes.
+	 *
+	 * @return the new agent
+	 */
+	static Agent createAgent() {
+		final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+				System.getProperties());
+		return Agent.getInstance(new AgentOptions(config), new RuntimeData(DATA));
+	}
+	// END android-change
 }
