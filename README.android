@@ -17,7 +17,7 @@ is the list of the changes:
 3) Change the runtime to reduce dependencies on core libraries.
    Previously, Offline's static initializer would eagerly create an
    Agent, a process which has lots of dependencies. With this change,
-   Offline only eagerly creates an ExecutionDataStore, which is much
+   Offline only eagerly creates a Map<Long, ExecutionData>, which is much
    more lightweight. The Agent is only created when it's actually
    needed. This makes it possible to instrument a lot of more core
    libraries without creating a circular dependency at runtime.
