@@ -14,18 +14,6 @@
 // limitations under the License.
 //
 
-// Some Jacoco source files depend on classes that do not exist in Android. While these classes are
-// not executed at runtime (because we use offline instrumentation), they will cause issues when
-// compiling them with ART during dex pre-opting. Therefore, it would prevent from applying code
-// coverage on classes in the bootclasspath (frameworks, services, ...) or system apps.
-// Note: we still may need to update the source code to cut dependencies in mandatory jacoco classes.
-jacoco_android_exclude_list = [
-    "%org.jacoco.core/src/org/jacoco/core/runtime/ModifiedSystemClassRuntime.java",
-    "%org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/PreMain.java",
-    "%org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/CoverageTransformer.java",
-    "%org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
-]
-
 // Build jacoco-agent from sources for the platform
 //
 // Note: this is only intended to be used for the platform development. This is *not* intended
@@ -39,6 +27,14 @@ java_library {
         "org.jacoco.agent.rt/src/**/*.java",
     ],
 
+    // Some Jacoco source files depend on classes that do not exist in Android.
+    // While these classes are not executed at runtime (because we use offline
+    // instrumentation), they will cause issues when compiling them with ART
+    // during dex pre-opting. Therefore, it would prevent from applying code
+    // coverage on classes in the bootclasspath (frameworks, services, ...) or
+    // system apps.
+    // Note: we still may need to update the source code to cut dependencies in
+    // mandatory jacoco classes.
     exclude_srcs: [
         "org.jacoco.core/src/org/jacoco/core/runtime/ModifiedSystemClassRuntime.java",
         "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/PreMain.java",
@@ -46,12 +42,19 @@ java_library {
         "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
     ],
 
-    // In order to include Jacoco in core libraries, we cannot depend on anything in the
-    // bootclasspath (or we would create dependency cycle). Therefore we compile against
-    // the SDK android.jar which gives the same APIs Jacoco depends on.
+    // In order to include Jacoco in core libraries, we cannot depend on
+    // anything in the bootclasspath (or we would create dependency cycle).
+    // Therefore we compile against the SDK android.jar which gives the same
+    // APIs Jacoco depends on.
     sdk_version: "9",
 
-    static_libs: ["jacoco-asm"],
+    // TODO(b/69671801): there's no bytecode on the device, so these shouldn't
+    // be necessary.
+    static_libs: [
+        "asm-6.0",
+        "asm-commons-6.0",
+        "asm-tree-6.0",
+    ],
 }
 
 // Build jacoco-cli from sources for the platform
@@ -75,17 +78,9 @@ java_library_host {
     ],
 
     static_libs: [
-        "jacoco-asm",
+        "asm-6.0",
+        "asm-commons-6.0",
+        "asm-tree-6.0",
         "args4j-2.0.28",
     ],
-}
-
-//
-// Build asm-5.0.1 as a static library
-//
-java_import {
-    name: "jacoco-asm",
-    host_supported: true,
-
-    jars: ["asm-debug-all-5.0.1.jar"],
 }
