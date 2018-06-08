@@ -37,10 +37,24 @@ public class RuntimeData {
 	 * Creates a new runtime.
 	 */
 	public RuntimeData() {
-		store = new ExecutionDataStore();
+		// BEGIN android-change
+		this(new ExecutionDataStore());
+		// END android-change
+	}
+
+	// BEGIN android-change
+	/**
+	 * Creates a new runtime, reusing an existing {@link ExecutionDataStore}.
+	 * 
+	 * @param store
+	 *            the store to reuse
+	 */
+	public RuntimeData(ExecutionDataStore store) {
+		this.store = store;
 		sessionId = "<none>";
 		startTimeStamp = System.currentTimeMillis();
 	}
+	// END android-change
 
 	/**
 	 * Sets a session identifier for this runtime. The identifier is used when
