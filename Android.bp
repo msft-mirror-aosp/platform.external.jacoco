@@ -20,6 +20,7 @@
 // to be used in the SDK where apps can use the official jacoco release.
 java_library {
     name: "jacocoagent",
+    installable: true,
 
     srcs: [
         "org.jacoco.core/src/**/*.java",
