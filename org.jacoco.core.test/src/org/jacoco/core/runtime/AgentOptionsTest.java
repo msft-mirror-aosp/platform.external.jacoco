@@ -47,7 +47,10 @@ public class AgentOptionsTest {
 		assertFalse(options.getInclNoLocationClasses());
 		assertNull(options.getSessionId());
 		assertTrue(options.getDumpOnExit());
-		assertEquals(AgentOptions.OutputMode.file, options.getOutput());
+		// BEGIN android-change
+		// assertEquals(AgentOptions.OutputMode.file, options.getOutput());
+		assertEquals(AgentOptions.OutputMode.none, options.getOutput());
+		// END android-change
 		assertEquals(AgentOptions.DEFAULT_ADDRESS, options.getAddress());
 		assertEquals(AgentOptions.DEFAULT_PORT, options.getPort());
 		assertNull(options.getClassDumpDir());
