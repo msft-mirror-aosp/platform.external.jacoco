@@ -43,12 +43,6 @@ java_library {
         "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
     ],
 
-    // In order to include Jacoco in core libraries, we cannot depend on
-    // anything in the bootclasspath (or we would create dependency cycle).
-    // Therefore we compile against the SDK android.jar which gives the same
-    // APIs Jacoco depends on.
-    sdk_version: "9",
-
     // TODO(b/69671801): there's no bytecode on the device, so these shouldn't
     // be necessary.
     static_libs: [
