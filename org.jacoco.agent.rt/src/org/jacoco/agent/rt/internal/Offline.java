@@ -11,8 +11,6 @@
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-import android.annotation.UnsupportedAppUsage;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -57,7 +55,6 @@ public final class Offline {
 	 *            probe count for this class
 	 * @return probe array instance for this class
 	 */
-        @UnsupportedAppUsage
 	public static boolean[] getProbes(final long classid,
 			final String classname, final int probecount) {
 		// BEGIN android-change
