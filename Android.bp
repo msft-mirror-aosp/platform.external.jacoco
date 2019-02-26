@@ -58,6 +58,19 @@ java_library {
     ],
 }
 
+// Generates stubs containing the classes that will be referenced by instrumented bytecode.
+droidstubs {
+    name: "jacoco-stubs-gen",
+    srcs: ["org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/Offline.java"],
+}
+
+// A stubs target containing the parts of JaCoCo that we need to add to the hidden API whitelist.
+java_library {
+    name: "jacoco-stubs",
+    compile_dex: true,
+    srcs: [":jacoco-stubs-gen"],
+}
+
 // Build jacoco-cli from sources for the platform
 
 // TODO(jeffrygaston) it'd be nice to keep the build process and/or list of source files in sync with
