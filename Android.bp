@@ -97,4 +97,11 @@ java_library_host {
         "asm-tree-6.0",
         "args4j-2.0.28",
     ],
+
+    dist: {
+        targets: [
+            "dist_files",
+            "apps_only",
+        ],
+    },
 }
