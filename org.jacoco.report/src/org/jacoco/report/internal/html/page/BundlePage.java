@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import org.jacoco.core.analysis.ICoverageNode;
 import org.jacoco.core.analysis.IPackageCoverage;
 import org.jacoco.report.ISourceFileLocator;
 import org.jacoco.report.internal.ReportOutputFolder;
-import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 
 /**
@@ -63,9 +62,6 @@ public class BundlePage extends TablePage<ICoverageNode> {
 
 	private void renderPackages() throws IOException {
 		for (final IPackageCoverage p : bundle.getPackages()) {
-			if (!p.containsCode()) {
-				continue;
-			}
 			final String packagename = p.getName();
 			final String foldername = packagename.length() == 0 ? "default"
 					: packagename.replace('/', '.');
@@ -84,18 +80,6 @@ public class BundlePage extends TablePage<ICoverageNode> {
 	@Override
 	protected String getFileName() {
 		return "index.html";
-	}
-
-	@Override
-	protected void content(HTMLElement body) throws IOException {
-		if (bundle.getPackages().isEmpty()) {
-			body.p().text("No class files specified.");
-		} else if (!bundle.containsCode()) {
-			body.p().text(
-					"None of the analyzed classes contain code relevant for code coverage.");
-		} else {
-			super.content(body);
-		}
 	}
 
 }

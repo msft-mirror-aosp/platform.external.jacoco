@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.jacoco.core.analysis;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -105,10 +106,13 @@ public class CoverageBuilderTest {
 	}
 
 	@Test
-	public void should_not_ignore_empty_classes() {
-		addClass(123L, false, "Empty", null);
+	public void testIgnoreClassesWithoutCode() {
+		final MethodCoverageImpl method = new MethodCoverageImpl("doit", "()V",
+				null);
+		addClass(123L, false, "Sample", null, method);
 
-		assertEquals(1, coverageBuilder.getClasses().size());
+		final Collection<IClassCoverage> classes = coverageBuilder.getClasses();
+		assertTrue(classes.isEmpty());
 	}
 
 	@Test(expected = IllegalStateException.class)

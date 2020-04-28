@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,55 +28,55 @@ public interface IHTMLReportContext {
 	 * 
 	 * @return static resources
 	 */
-	Resources getResources();
+	public Resources getResources();
 
 	/**
 	 * Returns the language names call-back used in this report.
 	 * 
 	 * @return language names
 	 */
-	ILanguageNames getLanguageNames();
+	public ILanguageNames getLanguageNames();
 
 	/**
 	 * Returns a table for rendering coverage nodes.
 	 * 
 	 * @return table for rendering
 	 */
-	Table getTable();
+	public Table getTable();
 
 	/**
 	 * Returns a string of textual information to include in every page footer.
 	 * 
 	 * @return footer text or empty string
 	 */
-	String getFooterText();
+	public String getFooterText();
 
 	/**
 	 * Returns the link to the sessions page.
 	 * 
 	 * @return sessions page link
 	 */
-	ILinkable getSessionsPage();
+	public ILinkable getSessionsPage();
 
 	/**
 	 * Returns the encoding of the generated HTML documents.
 	 * 
 	 * @return encoding for generated HTML documents
 	 */
-	String getOutputEncoding();
+	public String getOutputEncoding();
 
 	/**
 	 * Returns the service for index updates.
 	 * 
 	 * @return sevice for indes updates
 	 */
-	IIndexUpdate getIndexUpdate();
+	public IIndexUpdate getIndexUpdate();
 
 	/**
 	 * Returns the locale used to format numbers and dates.
 	 * 
 	 * @return locale for numbers and dates
 	 */
-	Locale getLocale();
+	public Locale getLocale();
 
 }

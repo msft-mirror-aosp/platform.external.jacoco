@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,22 +11,27 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
-/**
- * Unit tests for {@link SynchronizedFilter}.
- */
-public class SynchronizedFilterTest extends FilterTestBase {
+public class SynchronizedFilterTest implements IFilterOutput {
 
 	private final SynchronizedFilter filter = new SynchronizedFilter();
 
 	private final MethodNode m = new MethodNode(InstrSupport.ASM_API_VERSION, 0,
 			"name", "()V", null, null);
+
+	private AbstractInsnNode fromInclusive;
+	private AbstractInsnNode toInclusive;
 
 	@Test
 	public void javac() {
@@ -59,10 +64,9 @@ public class SynchronizedFilterTest extends FilterTestBase {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, context, output);
-
-		assertIgnored(new Range((LabelNode) handler.info,
-				((LabelNode) exit.info).getPrevious()));
+		filter.filter("Foo", "java/lang/Object", m, this);
+		assertEquals(handler.info, fromInclusive);
+		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
 	}
 
 	/**
@@ -113,9 +117,8 @@ public class SynchronizedFilterTest extends FilterTestBase {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, context, output);
-
-		assertIgnored();
+		filter.filter("Foo", "java/lang/Object", m, this);
+		assertNull(fromInclusive);
 	}
 
 	@Test
@@ -149,10 +152,20 @@ public class SynchronizedFilterTest extends FilterTestBase {
 		m.visitLabel(exit);
 		m.visitInsn(Opcodes.RETURN);
 
-		filter.filter(m, context, output);
+		filter.filter("Foo", "java/lang/Object", m, this);
+		assertEquals(handler.info, fromInclusive);
+		assertEquals(((LabelNode) exit.info).getPrevious(), toInclusive);
+	}
 
-		assertIgnored(new Range((LabelNode) handler.info,
-			((LabelNode) exit.info).getPrevious()));
+	public void ignore(AbstractInsnNode fromInclusive,
+			AbstractInsnNode toInclusive) {
+		assertNull(this.fromInclusive);
+		this.fromInclusive = fromInclusive;
+		this.toInclusive = toInclusive;
+	}
+
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		fail();
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,8 @@ public interface IAgentOutput {
 	 * @throws Exception
 	 *             in case startup fails
 	 */
-	void startup(AgentOptions options, RuntimeData data) throws Exception;
+	public void startup(final AgentOptions options, final RuntimeData data)
+			throws Exception;
 
 	/**
 	 * Shutdown the agent controller and clean up any resources it has created.
@@ -41,7 +42,7 @@ public interface IAgentOutput {
 	 * @throws Exception
 	 *             in case shutdown fails
 	 */
-	void shutdown() throws Exception;
+	public void shutdown() throws Exception;
 
 	/**
 	 * Write all execution data in the runtime to a location determined by the
@@ -52,6 +53,6 @@ public interface IAgentOutput {
 	 * @throws IOException
 	 *             in case writing fails
 	 */
-	void writeExecutionData(boolean reset) throws IOException;
+	public void writeExecutionData(boolean reset) throws IOException;
 
 }

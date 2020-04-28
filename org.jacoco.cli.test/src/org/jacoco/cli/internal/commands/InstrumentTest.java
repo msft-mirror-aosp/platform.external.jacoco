@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,14 +26,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.jacoco.cli.internal.CommandTestBase;
-import org.jacoco.core.internal.InputStreams;
-import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.FieldVisitor;
+import org.objectweb.asm.Opcodes;
 
 /**
  * Unit tests for {@link Instrument}.
@@ -48,7 +47,7 @@ public class InstrumentTest extends CommandTestBase {
 			throws Exception {
 		execute("instrument");
 		assertFailure();
-		assertContains("\"--dest\"", err);
+		assertContains("Option \"--dest\" is required", err);
 		assertContains(
 				"Usage: java -jar jacococli.jar instrument [<sourcefiles> ...]",
 				err);
@@ -135,19 +134,18 @@ public class InstrumentTest extends CommandTestBase {
 
 	private void assertInstrumented(File classfile) throws IOException {
 		InputStream in = new FileInputStream(classfile);
-		final ClassReader reader = InstrSupport
-				.classReaderFor(InputStreams.readFully(in));
+		ClassReader reader = new ClassReader(in);
 		in.close();
-		final Set<String> methods = new HashSet<String>();
-		reader.accept(new ClassVisitor(InstrSupport.ASM_API_VERSION) {
+		final Set<String> fields = new HashSet<String>();
+		reader.accept(new ClassVisitor(Opcodes.ASM6) {
 			@Override
-			public MethodVisitor visitMethod(int access, String name,
-					String descriptor, String signature, String[] exceptions) {
-				methods.add(name);
+			public FieldVisitor visitField(int access, String name, String desc,
+					String signature, Object value) {
+				fields.add(name);
 				return null;
 			}
 		}, 0);
-		assertTrue(methods.contains("$jacocoInit"));
+		assertTrue(fields.contains("$jacocoData"));
 	}
 
 }

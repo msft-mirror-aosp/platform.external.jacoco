@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,12 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * </ul>
 	 * 
 	 * <p>
+	 * Note that you <b>must</b> use <tt>implementation</tt> hints for
+	 * <tt>rule</tt> and <tt>limit</tt> when using Maven 2, with Maven 3 you do
+	 * not need to specify the attributes.
+	 * </p>
+	 * 
+	 * <p>
 	 * This example requires an overall instruction coverage of 80% and no class
 	 * must be missed:
 	 * </p>
@@ -71,15 +77,15 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	 * <pre>
 	 * {@code
 	 * <rules>
-	 *   <rule>
+	 *   <rule implementation="org.jacoco.maven.RuleConfiguration">
 	 *     <element>BUNDLE</element>
 	 *     <limits>
-	 *       <limit>
+	 *       <limit implementation="org.jacoco.report.check.Limit">
 	 *         <counter>INSTRUCTION</counter>
 	 *         <value>COVEREDRATIO</value>
 	 *         <minimum>0.80</minimum>
 	 *       </limit>
-	 *       <limit>
+	 *       <limit implementation="org.jacoco.report.check.Limit">
 	 *         <counter>CLASS</counter>
 	 *         <value>MISSEDCOUNT</value>
 	 *         <maximum>0</maximum>
@@ -128,20 +134,6 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 	@Parameter(defaultValue = "${project.build.directory}/jacoco.exec")
 	private File dataFile;
 
-	/**
-	 * A list of class files to include into analysis. May use wildcard
-	 * characters (* and ?). When not specified everything will be included.
-	 */
-	@Parameter
-	private List<String> includes;
-
-	/**
-	 * A list of class files to exclude from analysis. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded.
-	 */
-	@Parameter
-	private List<String> excludes;
-
 	private boolean violations;
 
 	private boolean canCheckCoverage() {
@@ -183,7 +175,8 @@ public class CheckMojo extends AbstractJacocoMojo implements IViolationsOutput {
 		try {
 			final IReportVisitor visitor = support.initRootVisitor();
 			support.loadExecutionData(dataFile);
-			support.processProject(visitor, getProject(), includes, excludes);
+			support.processProject(visitor, getProject(), this.getIncludes(),
+					this.getExcludes());
 			visitor.visitEnd();
 		} catch (final IOException e) {
 			throw new MojoExecutionException(

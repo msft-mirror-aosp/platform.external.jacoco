@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,20 @@
  *******************************************************************************/
 package org.jacoco.core.internal.analysis.filter;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jacoco.core.internal.instr.InstrSupport;
 import org.junit.Test;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-/**
- * Unit tests for {@link TryWithResourcesJavacFilter}.
- */
-public class TryWithResourcesJavacFilterTest extends FilterTestBase {
+public class TryWithResourcesJavacFilterTest implements IFilterOutput {
 
 	private final TryWithResourcesJavacFilter filter = new TryWithResourcesJavacFilter();
 
@@ -215,9 +219,21 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 8);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, context, output);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
-		assertIgnored(range0, range1, range2, range3);
+		assertEquals(4, from.size());
+
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
+
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
+
+		assertEquals(range2.fromInclusive, from.get(2));
+		assertEquals(range2.toInclusive, to.get(2));
+
+		assertEquals(range3.fromInclusive, from.get(3));
+		assertEquals(range3.toInclusive, to.get(3));
 	}
 
 	/**
@@ -532,9 +548,21 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 11);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, context, output);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
-		assertIgnored(range0, range1, range2, range3);
+		assertEquals(4, from.size());
+
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
+
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
+
+		assertEquals(range2.fromInclusive, from.get(2));
+		assertEquals(range2.toInclusive, to.get(2));
+
+		assertEquals(range3.fromInclusive, from.get(3));
+		assertEquals(range3.toInclusive, to.get(3));
 	}
 
 	/**
@@ -698,9 +726,15 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 
 		m.visitLabel(end);
 
-		filter.filter(m, context, output);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
-		assertIgnored(range0, range1);
+		assertEquals(2, from.size());
+
+		assertEquals(range0.fromInclusive, from.get(0));
+		assertEquals(range0.toInclusive, to.get(0));
+
+		assertEquals(range1.fromInclusive, from.get(1));
+		assertEquals(range1.toInclusive, to.get(1));
 	}
 
 	/**
@@ -760,9 +794,26 @@ public class TryWithResourcesJavacFilterTest extends FilterTestBase {
 		m.visitVarInsn(Opcodes.ALOAD, 4);
 		m.visitInsn(Opcodes.ATHROW);
 
-		filter.filter(m, context, output);
+		filter.filter("Foo", "java/lang/Object", m, this);
 
-		assertIgnored();
+		assertEquals(0, from.size());
+	}
+
+	static class Range {
+		AbstractInsnNode fromInclusive;
+		AbstractInsnNode toInclusive;
+	}
+
+	private final List<AbstractInsnNode> from = new ArrayList<AbstractInsnNode>();
+	private final List<AbstractInsnNode> to = new ArrayList<AbstractInsnNode>();
+
+	public void ignore(AbstractInsnNode from, AbstractInsnNode to) {
+		this.from.add(from);
+		this.to.add(to);
+	}
+
+	public void merge(final AbstractInsnNode i1, final AbstractInsnNode i2) {
+		fail();
 	}
 
 }

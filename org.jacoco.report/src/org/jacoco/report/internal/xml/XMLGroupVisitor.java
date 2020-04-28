@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.jacoco.report.internal.AbstractGroupVisitor;
 public class XMLGroupVisitor extends AbstractGroupVisitor {
 
 	/** XML element of this group */
-	protected final ReportElement element;
+	protected final XMLElement element;
 
 	/**
 	 * New handler for a group with the given name.
@@ -38,7 +38,7 @@ public class XMLGroupVisitor extends AbstractGroupVisitor {
 	 * @throws IOException
 	 *             in case of problems with the underlying writer
 	 */
-	public XMLGroupVisitor(final ReportElement element, final String name)
+	public XMLGroupVisitor(final XMLElement element, final String name)
 			throws IOException {
 		super(name);
 		this.element = element;
@@ -47,20 +47,24 @@ public class XMLGroupVisitor extends AbstractGroupVisitor {
 	@Override
 	protected void handleBundle(final IBundleCoverage bundle,
 			final ISourceFileLocator locator) throws IOException {
-		final ReportElement child = element.group(bundle.getName());
+		final XMLElement child = createChild(bundle.getName());
 		XMLCoverageWriter.writeBundle(bundle, child);
 	}
 
 	@Override
 	protected AbstractGroupVisitor handleGroup(final String name)
 			throws IOException {
-		final ReportElement child = element.group(name);
+		final XMLElement child = createChild(name);
 		return new XMLGroupVisitor(child, name);
 	}
 
 	@Override
 	protected void handleEnd() throws IOException {
 		XMLCoverageWriter.writeCounters(total, element);
+	}
+
+	private XMLElement createChild(final String name) throws IOException {
+		return XMLCoverageWriter.createChild(element, "group", name);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -44,7 +45,7 @@ public class PercentageColumnTest {
 
 	private Resources resources;
 
-	private HTMLElement html;
+	private HTMLDocument doc;
 
 	private HTMLElement td;
 
@@ -57,9 +58,9 @@ public class PercentageColumnTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		html = new HTMLElement(root.createFile("Test.html"), "UTF-8");
-		html.head().title();
-		td = html.body().table("somestyle").tr().td();
+		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
+		doc.head().title();
+		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 		column = new PercentageColumn(CounterEntity.LINE, Locale.ENGLISH);
 	}
@@ -73,14 +74,15 @@ public class PercentageColumnTest {
 	@Test
 	public void testInit() throws Exception {
 		assertTrue(column.init(null, null));
-		html.close();
+		doc.close();
 	}
 
 	@Test
 	public void testItem1() throws Exception {
 		final ITableItem item = createItem(100, 50);
 		column.item(td, item, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("33%",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -89,7 +91,8 @@ public class PercentageColumnTest {
 	public void testItem2() throws Exception {
 		final ITableItem item = createItem(0, 0);
 		column.item(td, item, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("n/a",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -98,7 +101,8 @@ public class PercentageColumnTest {
 	public void testRounding() throws Exception {
 		final ITableItem item = createItem(1, 199);
 		column.item(td, item, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("99%",
 				support.findStr(doc, "/html/body/table/tr/td[1]/text()"));
 	}
@@ -109,7 +113,8 @@ public class PercentageColumnTest {
 				Locale.FRENCH);
 		final ITableItem item = createItem(0, 1000);
 		column.item(td, item, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		// After integration of JEP 252 into JDK9, CLDR locale data is used by
 		// default, which results in usage of non-breaking space below, while
 		// the legacy locale data uses regular space:
@@ -121,7 +126,8 @@ public class PercentageColumnTest {
 	public void testFooter1() throws Exception {
 		final ITableItem item = createItem(20, 60);
 		column.footer(td, item.getNode(), resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("75%", support.findStr(doc, "/html/body/table/tr"));
 	}
 
@@ -129,7 +135,8 @@ public class PercentageColumnTest {
 	public void testFooter2() throws Exception {
 		final ITableItem item = createItem(0, 0);
 		column.footer(td, item.getNode(), resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("n/a", support.findStr(doc, "/html/body/table/tr"));
 	}
 
@@ -141,7 +148,7 @@ public class PercentageColumnTest {
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
-		html.close();
+		doc.close();
 	}
 
 	private ITableItem createItem(final int missed, final int covered) {
@@ -171,10 +178,5 @@ public class PercentageColumnTest {
 				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}
 		};
-	}
-
-	private Document parseDoc() throws Exception {
-		html.close();
-		return support.parse(output.getFile("Test.html"));
 	}
 }

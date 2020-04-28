@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,7 @@ import org.jacoco.core.analysis.ICoverageNode.ElementType;
 import org.jacoco.core.internal.analysis.CounterImpl;
 import org.jacoco.report.MemoryMultiReportOutput;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.HTMLSupport;
 import org.jacoco.report.internal.html.resources.Resources;
@@ -45,7 +46,7 @@ public class BarColumnTest {
 
 	private Resources resources;
 
-	private HTMLElement html;
+	private HTMLDocument doc;
 
 	private HTMLElement td;
 
@@ -58,9 +59,9 @@ public class BarColumnTest {
 		output = new MemoryMultiReportOutput();
 		root = new ReportOutputFolder(output);
 		resources = new Resources(root);
-		html = new HTMLElement(root.createFile("Test.html"), "UTF-8");
-		html.head().title();
-		td = html.body().table("somestyle").tr().td();
+		doc = new HTMLDocument(root.createFile("Test.html"), "UTF-8");
+		doc.head().title();
+		td = doc.body().table("somestyle").tr().td();
 		support = new HTMLSupport();
 		column = new BarColumn(CounterEntity.LINE, Locale.ENGLISH);
 	}
@@ -75,13 +76,14 @@ public class BarColumnTest {
 	public void testInit() throws Exception {
 		final ITableItem i = createItem(6, 24);
 		assertTrue(column.init(Arrays.asList(i), i.getNode()));
-		html.close();
+		doc.close();
 	}
 
 	@Test
 	public void testFooter() throws Exception {
 		column.footer(td, createNode(15, 5), resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 		assertEquals("15 of 20",
 				support.findStr(doc, "/html/body/table/tr/td/text()"));
 	}
@@ -92,7 +94,8 @@ public class BarColumnTest {
 		final ITableItem i2 = createItem(6, 24);
 		column.init(Arrays.asList(i1, i2), createNode(21, 29));
 		column.item(td, i1, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 
 		assertEquals("2",
 				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
@@ -102,16 +105,16 @@ public class BarColumnTest {
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
 		assertEquals("15",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("60", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals("60",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 
 		// green bar
 		assertEquals("jacoco-resources/greenbar.gif",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@src"));
 		assertEquals("5",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@alt"));
-		assertEquals("20", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[2]/@width"));
+		assertEquals("20",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[2]/@width"));
 	}
 
 	@Test
@@ -119,7 +122,8 @@ public class BarColumnTest {
 		final ITableItem i1 = createItem(20, 0);
 		column.init(Arrays.asList(i1), createNode(20, 0));
 		column.item(td, i1, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 
 		assertEquals("1",
 				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
@@ -129,8 +133,8 @@ public class BarColumnTest {
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
 		assertEquals("20",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("120", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals("120",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 	}
 
 	@Test
@@ -138,7 +142,8 @@ public class BarColumnTest {
 		final ITableItem i1 = createItem(00, 20);
 		column.init(Arrays.asList(i1), createNode(00, 20));
 		column.item(td, i1, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 
 		assertEquals("1",
 				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
@@ -148,8 +153,8 @@ public class BarColumnTest {
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@src"));
 		assertEquals("20",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
-		assertEquals("120", support.findStr(doc,
-				"/html/body/table/tr[1]/td/img[1]/@width"));
+		assertEquals("120",
+				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@width"));
 	}
 
 	@Test
@@ -157,7 +162,8 @@ public class BarColumnTest {
 		final ITableItem i1 = createItem(00, 00);
 		column.init(Arrays.asList(i1), createNode(00, 00));
 		column.item(td, i1, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 
 		assertEquals("0",
 				support.findStr(doc, "count(/html/body/table/tr[1]/td/img)"));
@@ -169,7 +175,8 @@ public class BarColumnTest {
 		final ITableItem i1 = createItem(0, 123456);
 		col.init(Arrays.asList(i1), createNode(00, 20));
 		col.item(td, i1, resources, root);
-		final Document doc = parseDoc();
+		doc.close();
+		final Document doc = support.parse(output.getFile("Test.html"));
 
 		assertEquals("123\u00a0456",
 				support.findStr(doc, "/html/body/table/tr[1]/td/img[1]/@alt"));
@@ -183,7 +190,7 @@ public class BarColumnTest {
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
-		html.close();
+		doc.close();
 	}
 
 	@Test
@@ -194,7 +201,7 @@ public class BarColumnTest {
 		assertTrue(c.compare(i1, i2) < 0);
 		assertTrue(c.compare(i2, i1) > 0);
 		assertEquals(0, c.compare(i1, i1));
-		html.close();
+		doc.close();
 	}
 
 	private ITableItem createItem(final int missed, final int covered) {
@@ -224,11 +231,6 @@ public class BarColumnTest {
 				this.lineCounter = CounterImpl.getInstance(missed, covered);
 			}
 		};
-	}
-
-	private Document parseDoc() throws Exception {
-		html.close();
-		return support.parse(output.getFile("Test.html"));
 	}
 
 }

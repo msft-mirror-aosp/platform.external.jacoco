@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
 package org.jacoco.maven;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -58,21 +57,6 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 	 */
 	@Parameter(property = "jacoco.append")
 	Boolean append;
-
-	/**
-	 * A list of class names to include in instrumentation. May use wildcard
-	 * characters (* and ?). When not specified everything will be included.
-	 */
-	@Parameter
-	private List<String> includes;
-
-	/**
-	 * A list of class names to exclude from instrumentation. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded.
-	 */
-	@Parameter
-	private List<String> excludes;
-
 	/**
 	 * A list of class loader names, that should be excluded from execution
 	 * analysis. The list entries are separated by a colon (:) and may use
@@ -184,13 +168,15 @@ public abstract class AbstractAgentMojo extends AbstractJacocoMojo {
 		if (append != null) {
 			agentOptions.setAppend(append.booleanValue());
 		}
-		if (includes != null && !includes.isEmpty()) {
-			agentOptions
-					.setIncludes(StringUtils.join(includes.iterator(), ":"));
+		if (getIncludes() != null && !getIncludes().isEmpty()) {
+			final String agentIncludes = StringUtils.join(getIncludes()
+					.iterator(), ":");
+			agentOptions.setIncludes(agentIncludes);
 		}
-		if (excludes != null && !excludes.isEmpty()) {
-			agentOptions
-					.setExcludes(StringUtils.join(excludes.iterator(), ":"));
+		if (getExcludes() != null && !getExcludes().isEmpty()) {
+			final String agentExcludes = StringUtils.join(getExcludes()
+					.iterator(), ":");
+			agentOptions.setExcludes(agentExcludes);
 		}
 		if (exclClassLoaders != null) {
 			agentOptions.setExclClassloader(exclClassLoaders);

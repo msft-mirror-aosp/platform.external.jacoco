@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import org.jacoco.core.JaCoCo;
 import org.jacoco.report.internal.ReportOutputFolder;
+import org.jacoco.report.internal.html.HTMLDocument;
 import org.jacoco.report.internal.html.HTMLElement;
 import org.jacoco.report.internal.html.IHTMLReportContext;
 import org.jacoco.report.internal.html.ILinkable;
@@ -70,12 +71,12 @@ public abstract class ReportPage implements ILinkable {
 	 *             if the page can't be written
 	 */
 	public void render() throws IOException {
-		final HTMLElement html = new HTMLElement(
+		final HTMLDocument doc = new HTMLDocument(
 				folder.createFile(getFileName()), context.getOutputEncoding());
-		html.attr("lang", context.getLocale().getLanguage());
-		head(html.head());
-		body(html.body());
-		html.close();
+		doc.attr("lang", context.getLocale().getLanguage());
+		head(doc.head());
+		body(doc.body());
+		doc.close();
 	}
 
 	/**
@@ -129,8 +130,8 @@ public abstract class ReportPage implements ILinkable {
 		span.a(context.getSessionsPage(), folder);
 	}
 
-	private void breadcrumb(final HTMLElement div,
-			final ReportOutputFolder base) throws IOException {
+	private void breadcrumb(final HTMLElement div, final ReportOutputFolder base)
+			throws IOException {
 		breadcrumbParent(parent, div, base);
 		div.span(getLinkStyle()).text(getLinkLabel());
 	}
@@ -150,8 +151,7 @@ public abstract class ReportPage implements ILinkable {
 		final HTMLElement versioninfo = footer.span(Styles.RIGHT);
 		versioninfo.text("Created with ");
 		versioninfo.a(JaCoCo.HOMEURL).text("JaCoCo");
-		versioninfo.text(" ");
-		versioninfo.text(JaCoCo.VERSION);
+		versioninfo.text(" ").text(JaCoCo.VERSION);
 		footer.text(context.getFooterText());
 	}
 

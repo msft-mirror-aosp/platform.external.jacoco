@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,7 @@ public interface ICoverageNode {
 	/**
 	 * Type of a Java element represented by a {@link ICoverageNode} instance.
 	 */
-	enum ElementType {
+	public enum ElementType {
 
 		/** Method */
 		METHOD,
@@ -45,7 +45,7 @@ public interface ICoverageNode {
 	/**
 	 * Different counter types supported by JaCoCo.
 	 */
-	enum CounterEntity {
+	public enum CounterEntity {
 
 		/** Counter for instructions */
 		INSTRUCTION,
@@ -71,56 +71,56 @@ public interface ICoverageNode {
 	 * 
 	 * @return type of this node
 	 */
-	ElementType getElementType();
+	public abstract ElementType getElementType();
 
 	/**
 	 * Returns the name of this node.
 	 * 
 	 * @return name of this node
 	 */
-	String getName();
+	public String getName();
 
 	/**
 	 * Returns the counter for byte code instructions.
 	 * 
 	 * @return counter for instructions
 	 */
-	ICounter getInstructionCounter();
+	public abstract ICounter getInstructionCounter();
 
 	/**
 	 * Returns the counter for branches.
 	 * 
 	 * @return counter for branches
 	 */
-	ICounter getBranchCounter();
+	public ICounter getBranchCounter();
 
 	/**
 	 * Returns the counter for lines.
 	 * 
 	 * @return counter for lines
 	 */
-	ICounter getLineCounter();
+	public ICounter getLineCounter();
 
 	/**
 	 * Returns the counter for cyclomatic complexity.
 	 * 
 	 * @return counter for complexity
 	 */
-	ICounter getComplexityCounter();
+	public ICounter getComplexityCounter();
 
 	/**
 	 * Returns the counter for methods.
 	 * 
 	 * @return counter for methods
 	 */
-	ICounter getMethodCounter();
+	public ICounter getMethodCounter();
 
 	/**
 	 * Returns the counter for classes.
 	 * 
 	 * @return counter for classes
 	 */
-	ICounter getClassCounter();
+	public ICounter getClassCounter();
 
 	/**
 	 * Generic access to the the counters.
@@ -129,14 +129,7 @@ public interface ICoverageNode {
 	 *            entity we're we want to have the counter for
 	 * @return counter for the given entity
 	 */
-	ICounter getCounter(CounterEntity entity);
-
-	/**
-	 * Checks whether this node contains code relevant for code coverage.
-	 *
-	 * @return <code>true</code> if this node contains code relevant for code coverage
-	 */
-	boolean containsCode();
+	public ICounter getCounter(CounterEntity entity);
 
 	/**
 	 * Creates a plain copy of this node. While {@link ICoverageNode}
@@ -146,6 +139,6 @@ public interface ICoverageNode {
 	 * 
 	 * @return copy with counters only
 	 */
-	ICoverageNode getPlainCopy();
+	public ICoverageNode getPlainCopy();
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * Copyright (c) 2009, 2018 Mountainminds GmbH & Co. KG and Contributors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,17 +19,22 @@ import java.util.List;
 import org.jacoco.core.analysis.IBundleCoverage;
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
-import org.jacoco.report.IReportGroupVisitor;
 import org.jacoco.report.IReportVisitor;
 import org.jacoco.report.ISourceFileLocator;
-import org.jacoco.report.internal.xml.ReportElement;
+import org.jacoco.report.internal.AbstractGroupVisitor;
 import org.jacoco.report.internal.xml.XMLCoverageWriter;
+import org.jacoco.report.internal.xml.XMLDocument;
+import org.jacoco.report.internal.xml.XMLElement;
 import org.jacoco.report.internal.xml.XMLGroupVisitor;
 
 /**
  * Report formatter that creates a single XML file for a coverage session
  */
 public class XMLFormatter {
+
+	private static final String PUBID = "-//JACOCO//DTD Report 1.0//EN";
+
+	private static final String SYSTEM = "report.dtd";
 
 	private String outputEncoding = "UTF-8";
 
@@ -54,11 +59,15 @@ public class XMLFormatter {
 	 */
 	public IReportVisitor createVisitor(final OutputStream output)
 			throws IOException {
-		class RootVisitor implements IReportVisitor {
+		final XMLElement root = new XMLDocument("report", PUBID, SYSTEM,
+				outputEncoding, true, output);
+		class RootVisitor extends XMLGroupVisitor implements IReportVisitor {
 
-			private ReportElement report;
+			RootVisitor(final XMLElement element) throws IOException {
+				super(element, null);
+			}
+
 			private List<SessionInfo> sessionInfos;
-			private XMLGroupVisitor groupVisitor;
 
 			public void visitInfo(final List<SessionInfo> sessionInfos,
 					final Collection<ExecutionData> executionData)
@@ -66,35 +75,36 @@ public class XMLFormatter {
 				this.sessionInfos = sessionInfos;
 			}
 
-			public void visitBundle(final IBundleCoverage bundle,
+			@Override
+			protected void handleBundle(final IBundleCoverage bundle,
 					final ISourceFileLocator locator) throws IOException {
-				createRootElement(bundle.getName());
-				XMLCoverageWriter.writeBundle(bundle, report);
+				writeHeader(bundle.getName());
+				XMLCoverageWriter.writeBundle(bundle, element);
 			}
 
-			public IReportGroupVisitor visitGroup(final String name)
+			@Override
+			protected AbstractGroupVisitor handleGroup(final String name)
 					throws IOException {
-				createRootElement(name);
-				groupVisitor = new XMLGroupVisitor(report, name);
-				return groupVisitor;
+				writeHeader(name);
+				return new XMLGroupVisitor(element, name);
 			}
 
-			private void createRootElement(final String name)
-					throws IOException {
-				report = new ReportElement(name, output, outputEncoding);
+			private void writeHeader(final String name) throws IOException {
+				element.attr("name", name);
 				for (final SessionInfo i : sessionInfos) {
-					report.sessioninfo(i);
+					final XMLElement sessioninfo = root.element("sessioninfo");
+					sessioninfo.attr("id", i.getId());
+					sessioninfo.attr("start", i.getStartTimeStamp());
+					sessioninfo.attr("dump", i.getDumpTimeStamp());
 				}
 			}
 
-			public void visitEnd() throws IOException {
-				if (groupVisitor != null) {
-					groupVisitor.visitEnd();
-				}
-				report.close();
+			@Override
+			protected void handleEnd() throws IOException {
+				element.close();
 			}
 		}
-		return new RootVisitor();
+		return new RootVisitor(root);
 	}
 
 }
