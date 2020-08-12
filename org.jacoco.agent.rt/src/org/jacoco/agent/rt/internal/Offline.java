@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.IExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
@@ -28,7 +29,7 @@ public final class Offline {
 
 	// BEGIN android-change
 	// private static final RuntimeData DATA;
-	private static final Map<Long, ExecutionData> DATA = new HashMap<Long, ExecutionData>();
+	private static final Map<Long, IExecutionData> DATA = new HashMap<Long, IExecutionData>();
 	// END android-change
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
@@ -44,6 +45,7 @@ public final class Offline {
 		// no instances
 	}
 
+	// BEGIN android-change
 	/**
 	 * API for offline instrumented classes.
 	 * 
@@ -53,27 +55,25 @@ public final class Offline {
 	 *            VM class name
 	 * @param probecount
 	 *            probe count for this class
-	 * @return probe array instance for this class
+	 * @return IExecutionData instance for this class
 	 */
-	public static boolean[] getProbes(final long classid,
+	public static IExecutionData getExecutionData(final long classid,
 			final String classname, final int probecount) {
-		// BEGIN android-change
 		// return DATA.getExecutionData(Long.valueOf(classid), classname,
 		//		probecount).getProbes();
 		synchronized (DATA) {
-			ExecutionData entry = DATA.get(classid);
+			IExecutionData entry = DATA.get(classid);
 			if (entry == null) {
 				entry = new ExecutionData(classid, classname, probecount);
 				DATA.put(classid, entry);
 			} else {
 				entry.assertCompatibility(classid, classname, probecount);
 			}
-			return entry.getProbes();
+			return entry;
 		}
-		// END android-change
 	}
+	// END android-change
 
-	// BEGIN android-change
 	/**
 	 * Creates a default agent, using config loaded from the classpath resource and the system
 	 * properties, and a runtime data instance populated with the execution data accumulated by
@@ -87,7 +87,7 @@ public final class Offline {
 				System.getProperties());
 		synchronized (DATA) {
 			ExecutionDataStore store = new ExecutionDataStore();
-			for (ExecutionData data : DATA.values()) {
+			for (IExecutionData data : DATA.values()) {
 				store.put(data);
 			}
 			return Agent.getInstance(new AgentOptions(config), new RuntimeData(store));
