@@ -94,17 +94,13 @@ public class ExecutionDataWriter implements ISessionInfoVisitor,
 		}
 	}
 
-	// BEGIN android-change
-	public void visitClassExecution(final IExecutionData data) {
-	// END android-change
+	public void visitClassExecution(final ExecutionData data) {
 		if (data.hasHits()) {
 			try {
 				out.writeByte(BLOCK_EXECUTIONDATA);
 				out.writeLong(data.getId());
 				out.writeUTF(data.getName());
-				// BEGIN android-change
-				out.writeBooleanArray(data.getProbesCopy());
-				// END android-change
+				out.writeBooleanArray(data.getProbes());
 			} catch (final IOException e) {
 				throw new RuntimeException(e);
 			}
