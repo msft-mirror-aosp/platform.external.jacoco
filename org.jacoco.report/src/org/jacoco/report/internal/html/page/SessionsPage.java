@@ -20,7 +20,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import org.jacoco.core.data.IExecutionData;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 import org.jacoco.report.ILanguageNames;
 import org.jacoco.report.internal.ReportOutputFolder;
@@ -48,7 +48,7 @@ public class SessionsPage extends ReportPage {
 
 	private final DateFormat dateFormat;
 
-	private final List<IExecutionData> executionData;
+	private final List<ExecutionData> executionData;
 
 	private final ElementIndex index;
 
@@ -69,24 +69,18 @@ public class SessionsPage extends ReportPage {
 	 *            settings context
 	 */
 	public SessionsPage(final List<SessionInfo> sessionInfos,
-			// BEGIN android-change
-			final Collection<IExecutionData> executionData,
-			// END android-change
+			final Collection<ExecutionData> executionData,
 			final ElementIndex index, final ReportPage parent,
 			final ReportOutputFolder folder, final IHTMLReportContext context) {
 		super(parent, folder, context);
 		this.sessionInfos = sessionInfos;
-		// BEGIN android-change
-		this.executionData = new ArrayList<IExecutionData>(executionData);
-		// END android-change
+		this.executionData = new ArrayList<ExecutionData>(executionData);
 		this.index = index;
 		this.dateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,
 				DateFormat.DEFAULT, context.getLocale());
 		final ILanguageNames names = context.getLanguageNames();
-		// BEGIN android-change
-		Collections.sort(this.executionData, new Comparator<IExecutionData>() {
-			public int compare(final IExecutionData e1, final IExecutionData e2) {
-			// END android-change
+		Collections.sort(this.executionData, new Comparator<ExecutionData>() {
+			public int compare(final ExecutionData e1, final ExecutionData e2) {
 				return names.getQualifiedClassName(e1.getName()).compareTo(
 						names.getQualifiedClassName(e2.getName()));
 			}
@@ -135,9 +129,7 @@ public class SessionsPage extends ReportPage {
 		}
 		final HTMLElement tbody = table.tbody();
 		final ILanguageNames names = context.getLanguageNames();
-		// BEGIN android-change
-		for (final IExecutionData e : executionData) {
-		// END android-change
+		for (final ExecutionData e : executionData) {
 			final HTMLElement tr = tbody.tr();
 			final String link = index.getLinkToClass(e.getId());
 			final String qualifiedName = names.getQualifiedClassName(e
