@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jacoco.cli.internal.Command;
-import org.jacoco.core.data.IExecutionData;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataReader;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
@@ -68,15 +68,13 @@ public class ExecInfo extends Command {
 			}
 		});
 		reader.setExecutionDataVisitor(new IExecutionDataVisitor() {
-			// BEGIN android-change
-			public void visitClassExecution(final IExecutionData data) {
+			public void visitClassExecution(final ExecutionData data) {
 				out.printf("%016x  %3d of %3d   %s%n",
 						Long.valueOf(data.getId()),
-						Integer.valueOf(getHitCount(data.getProbesCopy())),
-						Integer.valueOf(data.getProbeCount()),
+						Integer.valueOf(getHitCount(data.getProbes())),
+						Integer.valueOf(data.getProbes().length),
 						data.getName());
 			}
-			// END android-change
 		});
 		reader.read();
 		in.close();
