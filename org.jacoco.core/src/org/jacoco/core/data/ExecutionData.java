@@ -20,9 +20,7 @@ import java.util.Arrays;
  * has to be taken about the probe data array of type <code>boolean[]</code>
  * which can be modified.
  */
-// BEGIN android-change
-public final class ExecutionData implements IExecutionData {
-// END android-change
+public final class ExecutionData {
 
 	private final long id;
 
@@ -83,43 +81,15 @@ public final class ExecutionData implements IExecutionData {
 		return name;
 	}
 
-	// BEGIN android-change
 	/**
-	 * Returns a copy of the current probe values.
-	 *
-	 * @return copy of the probe array
-	 */
-	public boolean[] getProbesCopy() {
-		return Arrays.copyOf(probes, probes.length);
-	}
-
-	/**
-	 * The number of probes in this ExecutionData.
-	 *
-	 * @return the number of probes
-	 */
-	public int getProbeCount() {
-		return probes.length;
-	}
-
-	/**
-	 * Returns the execution data probe for a given index. A value of
-	 * <code>true</code> indicates that the corresponding probe was
-	 * executed.
+	 * Returns the execution data probes. A value of <code>true</code> indicates
+	 * that the corresponding probe was executed.
 	 * 
 	 * @return probe data
 	 */
-	public boolean getProbe(final int index) {
-		return probes[index];
+	public boolean[] getProbes() {
+		return probes;
 	}
-
-	/**
-	 * Sets the execution data probe for a given index to <code>true</code>.
-	 */
-	public void setProbe(final int index) {
-		probes[index] = true;
-	}
-	// END android-change
 
 	/**
 	 * Sets all probes to <code>false</code>.
@@ -157,9 +127,7 @@ public final class ExecutionData implements IExecutionData {
 	 * @param other
 	 *            execution data to merge
 	 */
-	// BEGIN android-change
-	public void merge(final IExecutionData other) {
-	// END android-change
+	public void merge(final ExecutionData other) {
 		merge(other, true);
 	}
 
@@ -186,12 +154,10 @@ public final class ExecutionData implements IExecutionData {
 	 * @param flag
 	 *            merge mode
 	 */
-	public void merge(final IExecutionData other, final boolean flag) {
-		// BEGIN android-change
+	public void merge(final ExecutionData other, final boolean flag) {
 		assertCompatibility(other.getId(), other.getName(),
-				other.getProbeCount());
-		final boolean[] otherData = other.getProbesCopy();
-		// END android-change
+				other.getProbes().length);
+		final boolean[] otherData = other.getProbes();
 		for (int i = 0; i < probes.length; i++) {
 			if (otherData[i]) {
 				probes[i] = flag;
