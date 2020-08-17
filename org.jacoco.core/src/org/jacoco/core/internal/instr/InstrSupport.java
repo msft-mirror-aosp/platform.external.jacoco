@@ -76,7 +76,9 @@ public final class InstrSupport {
 	 * Data type of the field that stores coverage information for a class (
 	 * <code>boolean[]</code>).
 	 */
-	public static final String DATAFIELD_DESC = "[Z";
+	// BEGIN android-change
+	public static final String DATAFIELD_DESC = "Lorg/jacoco/core/data/IExecutionData;";
+	// END android-change
 
 	// === Init Method ===
 
@@ -88,7 +90,9 @@ public final class InstrSupport {
 	/**
 	 * Descriptor of the initialization method.
 	 */
-	public static final String INITMETHOD_DESC = "()[Z";
+	// BEGIN android-change
+	public static final String INITMETHOD_DESC = "()Lorg/jacoco/core/data/IExecutionData;";
+	// END android-change
 
 	/**
 	 * Access modifiers of the initialization method.
