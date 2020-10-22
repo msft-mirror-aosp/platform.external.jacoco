@@ -94,7 +94,7 @@ public final class Offline {
 				data.convert(CHANNEL);
 			}
 		}  catch (IOException e) {
-			throw new RuntimeException(e);
+			// TODO(olivernguyen): Add logging to debug issues more easily.
 		}
 	}
 
