@@ -3,11 +3,8 @@ package org.jacoco.core.data;
 
 import static java.lang.String.format;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.charset.Charset;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
@@ -21,9 +18,6 @@ import org.jacoco.core.data.ExecutionDataWriter;
  * requiring a flush of the coverage data.
  */
 public final class MappedExecutionData implements IExecutionData {
-
-	private static FileChannel CHANNEL;
-
 	private final long id;
 	private final String name;
 	private final int probeCount;
@@ -34,13 +28,31 @@ public final class MappedExecutionData implements IExecutionData {
 	/**
 	 * Creates the mapped execution data.
 	 */
-	public MappedExecutionData(final long id, final String name, final int probeCount)
+	public MappedExecutionData(
+		final long id, final String name, final int probeCount, final FileChannel channel)
 			throws IOException {
 		this.id = id;
 		this.name = name;
 		this.probeCount = probeCount;
 
-		createMemoryMappedProbeArray(id, name, probeCount);
+		createMemoryMappedProbeArray(id, name, probeCount, channel);
+	}
+
+	public MappedExecutionData(
+			final long id,
+			final String name,
+			final boolean[] probes,
+			final FileChannel channel) throws IOException {
+		this.id = id;
+		this.name = name;
+		this.probeCount = probes.length;
+
+		createMemoryMappedProbeArray(id, name, probes.length, channel);
+		for (int i = 0; i < probes.length; i++) {
+			if (probes[i]) {
+				setProbe(i);
+			}
+		}
 	}
 
 	/**
@@ -51,21 +63,9 @@ public final class MappedExecutionData implements IExecutionData {
 	 * @param probeCount  the number of probes for this class
 	 */
 	private void createMemoryMappedProbeArray(
-		final long id, final String name, final int probeCount) throws IOException {
-		// TODO: Figure out a more portable way to do this. Currently needed to avoid
-		// cross-VM race conditions when writing/mapping the file.  Since most processes
-		// are forked from zygote, they will initially share the same output file, but
-		// without synchronization across VMs, this can cause simultaneous maps/writes from
-		// different VMs to interrupt each other, resulting in malformed execution data.
-		// Adding file locks did not resolve this issue. Note that only new classes that
-		// were loaded after the fork will end up in the new file. Classes that were
-		// already loaded will end up in the original output file for the pre-forked
-		// process, which is OK.
-		if (CHANNEL == null) {
-			throw new IOException("Memory mapped file was not initialized.");
-		}
-
-		synchronized (CHANNEL) {
+		final long id, final String name, final int probeCount, final FileChannel channel)
+			throws IOException {
+		synchronized (channel) {
 			int byteCount = (probeCount + 7) / 8;
 
 			// Write the ExecutionData block info.
@@ -74,33 +74,13 @@ public final class MappedExecutionData implements IExecutionData {
 			execDataBuffer.putLong(id);
 			execDataBuffer.putShort((short) name.length());
 			execDataBuffer.flip();
-			CHANNEL.write(execDataBuffer);
-			CHANNEL.write(ByteBuffer.wrap(name.getBytes(Charset.forName("UTF-8"))));
+			channel.write(execDataBuffer);
+			channel.write(ByteBuffer.wrap(name.getBytes(Charset.forName("UTF-8"))));
 
 			// Write the probe info and map part of this file for the probe data.
-			CHANNEL.write(toVarIntByteBuffer(probeCount));
-			probeBuffer = CHANNEL.map(FileChannel.MapMode.READ_WRITE, CHANNEL.position(), byteCount);
-			CHANNEL.position(CHANNEL.position() + byteCount);
-		}
-	}
-
-	/**
-	 * Creates the output file that will be mapped for probe data.
-	 */
-	public static void prepareFile(int pid) throws IOException {
-		// Write header information to the file.
-		ByteBuffer headerBuffer = ByteBuffer.allocate(5);
-		headerBuffer.put(ExecutionDataWriter.BLOCK_HEADER);
-		headerBuffer.putChar(ExecutionDataWriter.MAGIC_NUMBER);
-		headerBuffer.putChar(ExecutionDataWriter.FORMAT_VERSION);
-		headerBuffer.flip();
-
-		// If this file already exists (due to pid re-usage), the previous coverage data
-		// will be lost when the file is overwritten.
-		File outputFile = new File("/data/misc/trace/jacoco-" + pid + ".mm.ec");
-		CHANNEL = new RandomAccessFile(outputFile, "rw").getChannel();
-		synchronized (CHANNEL) {
-			CHANNEL.write(headerBuffer);
+			channel.write(toVarIntByteBuffer(probeCount));
+			probeBuffer = channel.map(FileChannel.MapMode.READ_WRITE, channel.position(), byteCount);
+			channel.position(channel.position() + byteCount);
 		}
 	}
 

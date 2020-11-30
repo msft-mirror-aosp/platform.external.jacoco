@@ -13,11 +13,16 @@ package org.jacoco.agent.rt.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataWriter;
+import org.jacoco.core.data.ExecutionDataDelegate;
 import org.jacoco.core.data.IExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.MappedExecutionData;
@@ -32,8 +37,8 @@ public final class Offline {
 
 	// BEGIN android-change
 	// private static final RuntimeData DATA;
-	private static final Map<Long, IExecutionData> DATA = new HashMap<Long, IExecutionData>();
-	private static int PID = -1;
+	private static final Map<Long, ExecutionDataDelegate> DATA = new HashMap<Long, ExecutionDataDelegate>();
+	private static FileChannel CHANNEL;
 	// END android-change
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
 
@@ -66,51 +71,10 @@ public final class Offline {
 		// return DATA.getExecutionData(Long.valueOf(classid), classname,
 		//		probecount).getProbes();
 		synchronized (DATA) {
-			IExecutionData entry = DATA.get(classid);
+			ExecutionDataDelegate entry = DATA.get(classid);
 			if (entry == null) {
-				// BEGIN android-change
-				// The list below are not allowed to use the memory-mapped
-				// implementation due either:
-				//   1) They are loaded at VM initialization time.
-				//	a) android.*
-				//	b) dalvik.*
-				//	c) libcore.*
-				//   2) They are used by the memory-mapped execution data
-				//      implementation, which would cause a stack overflow due
-				//      to the circular dependency.
-				//	a) com.android.i18n.*
-				//	b) com.android.icu.*
-				//	c) java.*
-				//	d) org.apache.*
-				//	e) sun.*
-				// These classes can still have coverage collected through the
-				// normal execution data process, but requires a flush to be done
-				// instead of simply being available on disk at all times.
-				if (classname.startsWith("android/")
-					|| classname.startsWith("com/android/i18n/")
-					|| classname.startsWith("com/android/icu/")
-					|| classname.startsWith("dalvik/")
-					|| classname.startsWith("java/")
-					|| classname.startsWith("libcore/")
-					|| classname.startsWith("org/apache/")
-					|| classname.startsWith("sun/")) {
-					entry = new ExecutionData(classid, classname, probecount);
-				} else {
-					try {
-						int pid = getPid();
-						if (PID != pid) {
-							PID = pid;
-							rebuildExecutionData(pid);
-						}
-						entry = new MappedExecutionData(
-							classid, classname, probecount);
-					} catch (IOException e) {
-						// Fall back to non-memory-mapped execution data.
-						entry = new ExecutionData(
-							classid, classname, probecount);
-					}
-				}
-				// END android-change
+				entry = new ExecutionDataDelegate(
+						classid, classname, probecount, CHANNEL);
 				DATA.put(classid, entry);
 			} else {
 				entry.assertCompatibility(classid, classname, probecount);
@@ -119,23 +83,38 @@ public final class Offline {
 		}
 	}
 
-	private static void rebuildExecutionData(int pid) throws IOException {
-		MappedExecutionData.prepareFile(pid);
-		synchronized (DATA) {
-			for (IExecutionData execData : DATA.values()) {
-				if (execData instanceof MappedExecutionData) {
-					// Create new instances of MappedExecutionData using the
-					// new file, but don't copy the old data. Old data will
-					// remain in its existing file and can be merged during
-					// post-processing.
-					DATA.put(
-						execData.getId(),
-						new MappedExecutionData(
-							execData.getId(),
-							execData.getName(),
-							execData.getProbeCount()));
-				}
+	/**
+	 * Enables memory-mapped execution data and converts existing
+	 * {@link ExecutionDataDelegate}s.
+	 */
+	public static void enableMemoryMappedData() {
+		try {
+			prepareFile(getPid());
+			for (ExecutionDataDelegate data : DATA.values()) {
+				data.convert(CHANNEL);
 			}
+		}  catch (IOException e) {
+			// TODO(olivernguyen): Add logging to debug issues more easily.
+		}
+	}
+
+	/**
+	 * Creates the output file that will be mapped for probe data.
+	 */
+	private static void prepareFile(int pid) throws IOException {
+		// Write header information to the file.
+		ByteBuffer headerBuffer = ByteBuffer.allocate(5);
+		headerBuffer.put(ExecutionDataWriter.BLOCK_HEADER);
+		headerBuffer.putChar(ExecutionDataWriter.MAGIC_NUMBER);
+		headerBuffer.putChar(ExecutionDataWriter.FORMAT_VERSION);
+		headerBuffer.flip();
+
+		// If this file already exists (due to pid re-usage), the previous coverage data
+		// will be lost when the file is overwritten.
+		File outputFile = new File("/data/misc/trace/jacoco-" + pid + ".mm.ec");
+		CHANNEL = new RandomAccessFile(outputFile, "rw").getChannel();
+		synchronized (CHANNEL) {
+			CHANNEL.write(headerBuffer);
 		}
 	}
 
