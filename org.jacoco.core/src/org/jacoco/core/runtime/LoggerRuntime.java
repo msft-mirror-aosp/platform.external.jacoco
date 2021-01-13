@@ -168,9 +168,7 @@ public class LoggerRuntime extends AbstractRuntime {
 		@Override
 		public void publish(final LogRecord record) {
 			if (key.equals(record.getMessage())) {
-				// BEGIN android-change
-				data.getExecutionData(record.getParameters());
-				// END android-change
+				data.getProbes(record.getParameters());
 			}
 		}
 
