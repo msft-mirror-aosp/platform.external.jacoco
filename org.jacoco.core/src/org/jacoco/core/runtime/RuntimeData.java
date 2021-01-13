@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
-import org.jacoco.core.data.IExecutionData;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.IExecutionDataVisitor;
 import org.jacoco.core.data.ISessionInfoVisitor;
@@ -128,18 +128,15 @@ public class RuntimeData {
 	 *            probe data length
 	 * @return execution data
 	 */
-	// BEGIN android-change
-	public IExecutionData getExecutionData(final Long id, final String name,
+	public ExecutionData getExecutionData(final Long id, final String name,
 			final int probecount) {
-	// END android-change
 		synchronized (store) {
 			return store.get(id, name, probecount);
 		}
 	}
 
-	// BEGIN android-change
 	/**
-	 * Retrieves the execution data for a given class. The passed
+	 * Retrieves the execution probe array for a given class. The passed
 	 * {@link Object} array instance is used for parameters and the return value
 	 * as follows. Call parameters:
 	 * 
@@ -152,19 +149,18 @@ public class RuntimeData {
 	 * Return value:
 	 * 
 	 * <ul>
-	 * <li>args[0]: execution data ({@link IExecutionData})
+	 * <li>args[0]: probe array (<code>boolean[]</code>)
 	 * </ul>
 	 * 
 	 * @param args
 	 *            parameter array of length 3
 	 */
-	public void getExecutionData(final Object[] args) {
+	public void getProbes(final Object[] args) {
 		final Long classid = (Long) args[0];
 		final String name = (String) args[1];
 		final int probecount = ((Integer) args[2]).intValue();
-		args[0] = getExecutionData(classid, name, probecount);
+		args[0] = getExecutionData(classid, name, probecount).getProbes();
 	}
-	// END android-change
 
 	/**
 	 * In violation of the regular semantic of {@link Object#equals(Object)}
@@ -177,9 +173,7 @@ public class RuntimeData {
 	@Override
 	public boolean equals(final Object args) {
 		if (args instanceof Object[]) {
-			// BEGIN android-change
-			getExecutionData((Object[]) args);
-			// END android-change
+			getProbes((Object[]) args);
 		}
 		return super.equals(args);
 	}
