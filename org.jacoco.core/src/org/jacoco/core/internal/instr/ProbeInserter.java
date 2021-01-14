@@ -67,20 +67,25 @@ class ProbeInserter extends MethodVisitor implements IProbeInserter {
 
 	public void insertProbe(final int id) {
 
-		// BEGIN android-change
-		// For a probe we call setProbe on the IExecutionData object.
+		// For a probe we set the corresponding position in the boolean[] array
+		// to true.
 
 		mv.visitVarInsn(Opcodes.ALOAD, variable);
 
-		// Stack[0]: Lorg/jacoco/core/data/IExecutionData;
+		// Stack[0]: [Z
 
 		InstrSupport.push(mv, id);
 
 		// Stack[1]: I
-		// Stack[0]: Lorg/jacoco/core/data/IExecutionData;
+		// Stack[0]: [Z
 
-		mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "org/jacoco/core/data/IExecutionData", "setProbe", "(I)V", true);
-		// END android-change
+		mv.visitInsn(Opcodes.ICONST_1);
+
+		// Stack[2]: I
+		// Stack[1]: I
+		// Stack[0]: [Z
+
+		mv.visitInsn(Opcodes.BASTORE);
 	}
 
 	@Override
