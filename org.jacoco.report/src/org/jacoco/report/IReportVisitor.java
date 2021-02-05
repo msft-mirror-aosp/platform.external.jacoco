@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.jacoco.core.data.IExecutionData;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 
 /**
@@ -38,10 +38,8 @@ public interface IReportVisitor extends IReportGroupVisitor {
 	 * @throws IOException
 	 *             in case of IO problems with the report writer
 	 */
-	public void visitInfo(List<SessionInfo> sessionInfos,
-			// BEGIN android-change
-			Collection<IExecutionData> executionData) throws IOException;
-			// END android-change
+	void visitInfo(List<SessionInfo> sessionInfos,
+			Collection<ExecutionData> executionData) throws IOException;
 
 	/**
 	 * Has to be called after all report data has been emitted.

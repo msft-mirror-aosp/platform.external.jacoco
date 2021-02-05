@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jacoco.core.analysis.IBundleCoverage;
-import org.jacoco.core.data.IExecutionData;
+import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.SessionInfo;
 
 /**
@@ -41,9 +41,7 @@ public class MultiReportVisitor extends MultiGroupVisitor implements
 	}
 
 	public void visitInfo(final List<SessionInfo> sessionInfos,
-			// BEGIN android-change
-			final Collection<IExecutionData> executionData) throws IOException {
-			// END android-chnage
+			final Collection<ExecutionData> executionData) throws IOException {
 		for (final IReportVisitor v : visitors) {
 			v.visitInfo(sessionInfos, executionData);
 		}

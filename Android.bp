@@ -66,10 +66,7 @@ java_library {
 // Generates stubs containing the classes that will be referenced by instrumented bytecode.
 droidstubs {
     name: "jacoco-stubs-gen",
-    srcs: [
-        "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/Offline.java",
-        "org.jacoco.core/src/org/jacoco/core/data/IExecutionData.java",
-    ],
+    srcs: ["org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/Offline.java"],
 }
 
 // A stubs target containing the parts of JaCoCo that we need to add to the hidden API whitelist.

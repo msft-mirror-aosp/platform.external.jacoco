@@ -24,8 +24,6 @@ public interface IExecutionDataVisitor {
 	 * @param data
 	 *            execution data for a class
 	 */
-	// BEGIN android-change
-	public void visitClassExecution(IExecutionData data);
-	// END android-change
+	void visitClassExecution(ExecutionData data);
 
 }
