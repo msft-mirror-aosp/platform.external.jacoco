@@ -18,7 +18,7 @@ public class ExecutionDataDelegate implements IExecutionData {
 			try {
 				delegate = new MappedExecutionData(id, name, probeCount, channel);
 			} catch (IOException e) {
-				delegate = new ExecutionData(id, name, probeCount);
+				throw new RuntimeException(e);
 			}
 		} else {
 			delegate = new ExecutionData(id, name, probeCount);
