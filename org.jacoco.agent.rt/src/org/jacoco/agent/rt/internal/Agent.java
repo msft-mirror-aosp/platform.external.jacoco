@@ -91,12 +91,10 @@ public class Agent implements IAgent {
 	 */
 	// END android-change
 	public static synchronized Agent getInstance() throws IllegalStateException {
-		if (singleton == null) {
-			// BEGIN android-change
-			// throw new IllegalStateException("JaCoCo agent not started.");
-			singleton = Offline.createAgent();
-			// END android-change
-		}
+		// BEGIN android-change
+		// throw new IllegalStateException("JaCoCo agent not started.");
+		singleton = Offline.createAgent();
+		// END android-change
 		return singleton;
 	}
 
