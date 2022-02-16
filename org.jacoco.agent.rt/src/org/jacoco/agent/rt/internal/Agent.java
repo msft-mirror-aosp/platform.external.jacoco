@@ -34,6 +34,8 @@ import org.jacoco.core.runtime.RuntimeData;
  */
 public class Agent implements IAgent {
 
+	private static Agent singleton;
+
 	/**
 	 * Returns a global instance which is already started. If the method is
 	 * called the first time the instance is created with the given options.
@@ -61,15 +63,18 @@ public class Agent implements IAgent {
 	 * @return global instance
 	 */
 	public static synchronized Agent getInstance(final AgentOptions options, RuntimeData data) {
-		final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR, data);
-		agent.startup();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				agent.shutdown();
-			}
-		});
-		return agent;
+		if (singleton == null) {
+			final Agent agent = new Agent(options, IExceptionLogger.SYSTEM_ERR, data);
+			agent.startup();
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					agent.shutdown();
+				}
+			});
+			singleton = agent;
+		}
+		return singleton;
 	}
 	// END android-change
 
@@ -86,10 +91,13 @@ public class Agent implements IAgent {
 	 */
 	// END android-change
 	public static synchronized Agent getInstance() throws IllegalStateException {
-		// BEGIN android-change
-		// throw new IllegalStateException("JaCoCo agent not started.");
-		return Offline.createAgent();
-		// END android-change
+		if (singleton == null) {
+			// BEGIN android-change
+			// throw new IllegalStateException("JaCoCo agent not started.");
+			singleton = Offline.createAgent();
+			// END android-change
+		}
+		return singleton;
 	}
 
 	private final AgentOptions options;
