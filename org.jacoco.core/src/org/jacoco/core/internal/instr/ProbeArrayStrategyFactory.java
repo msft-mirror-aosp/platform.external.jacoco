@@ -50,13 +50,10 @@ public final class ProbeArrayStrategyFactory {
 			if (counter.getCount() == 0) {
 				return new NoneProbeArrayStrategy();
 			}
-// BEGIN android-change
-			// See https://github.com/jacoco/jacoco/issues/1151
-			// if (version >= Opcodes.V11 && counter.hasMethods()) {
-			// 	return new CondyProbeArrayStrategy(className, true, classId,
-			// 			accessorGenerator);
-			// }
-// END android-change
+			if (version >= Opcodes.V11 && counter.hasMethods()) {
+				return new CondyProbeArrayStrategy(className, true, classId,
+						accessorGenerator);
+			}
 			if (version >= Opcodes.V1_8 && counter.hasMethods()) {
 				return new InterfaceFieldProbeArrayStrategy(className, classId,
 						counter.getCount(), accessorGenerator);
@@ -65,13 +62,10 @@ public final class ProbeArrayStrategyFactory {
 						counter.getCount(), accessorGenerator);
 			}
 		} else {
-// BEGIN android-change
-			// See https://github.com/jacoco/jacoco/issues/1151
-			// if (version >= Opcodes.V11) {
-			// 	return new CondyProbeArrayStrategy(className, false, classId,
-			// 			accessorGenerator);
-			// }
-// END android-change
+			if (version >= Opcodes.V11) {
+				return new CondyProbeArrayStrategy(className, false, classId,
+						accessorGenerator);
+			}
 			return new ClassFieldProbeArrayStrategy(className, classId,
 					InstrSupport.needsFrames(version), accessorGenerator);
 		}
