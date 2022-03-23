@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -97,8 +96,7 @@ class BundleChecker {
 			}
 		}
 		if (traverseSourceFiles) {
-			for (final ISourceFileCoverage s : packageCoverage
-					.getSourceFiles()) {
+			for (final ISourceFileCoverage s : packageCoverage.getSourceFiles()) {
 				check(s);
 			}
 		}
@@ -140,12 +138,12 @@ class BundleChecker {
 	}
 
 	private void checkLimit(final ICoverageNode node, final String elementtype,
-			final String elementname, final Rule rule, final Limit limit) {
+			final String typename, final Rule rule, final Limit limit) {
 		final String message = limit.check(node);
 		if (message != null) {
-			output.onViolation(node, rule, limit,
-					String.format("Rule violated for %s %s: %s", elementtype,
-							elementname, message));
+			output.onViolation(node, rule, limit, String.format(
+					"Rule violated for %s %s: %s", elementtype, typename,
+					message));
 		}
 	}
 

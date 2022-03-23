@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.check;
 
@@ -35,19 +34,15 @@ public class LimitTest {
 	}
 
 	@Test
-	public void default_should_define_no_limits() {
+	public void testDefaults() {
 		assertNull(limit.getMinimum());
 		assertNull(limit.getMaximum());
-	}
-
-	@Test
-	public void default_should_check_coverageratio_on_instructions() {
 		assertEquals(CounterEntity.INSTRUCTION, limit.getEntity());
 		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
 	}
 
 	@Test
-	public void check_should_fail_on_value_totalcount() {
+	public void testTotalCount() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.TOTALCOUNT, limit.getValue());
@@ -57,7 +52,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_value_missedcount() {
+	public void testMissedCount() {
 		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDCOUNT, limit.getValue());
@@ -67,7 +62,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_value_coveredcount() {
+	public void testCoveredCount() {
 		limit.setValue(CounterValue.COVEREDCOUNT.name());
 		limit.setMaximum("-1");
 		assertEquals(CounterValue.COVEREDCOUNT, limit.getValue());
@@ -77,26 +72,12 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_value_missedratio() {
+	public void testMissedRatio() {
 		limit.setValue(CounterValue.MISSEDRATIO.name());
-		limit.setMaximum("0.5");
+		limit.setMaximum("-1");
 		assertEquals(CounterValue.MISSEDRATIO, limit.getValue());
 		assertEquals(
-				"instructions missed ratio is 1.0, but expected maximum is 0.5",
-				limit.check(new TestNode() {
-					{
-						instructionCounter = CounterImpl.COUNTER_1_0;
-					}
-				}));
-	}
-
-	@Test
-	public void check_should_fail_on_value_coveredratio() {
-		limit.setValue(CounterValue.COVEREDRATIO.name());
-		limit.setMaximum("0.5");
-		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
-		assertEquals(
-				"instructions covered ratio is 1.0, but expected maximum is 0.5",
+				"instructions missed ratio is 0, but expected maximum is -1",
 				limit.check(new TestNode() {
 					{
 						instructionCounter = CounterImpl.COUNTER_0_1;
@@ -105,7 +86,21 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_counter_instruction() {
+	public void testCoveredRatio() {
+		limit.setValue(CounterValue.COVEREDRATIO.name());
+		limit.setMaximum("-1");
+		assertEquals(CounterValue.COVEREDRATIO, limit.getValue());
+		assertEquals(
+				"instructions covered ratio is 0, but expected maximum is -1",
+				limit.check(new TestNode() {
+					{
+						instructionCounter = CounterImpl.COUNTER_1_0;
+					}
+				}));
+	}
+
+	@Test
+	public void testInstruction() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.INSTRUCTION.name());
 		limit.setMaximum("-1");
@@ -116,7 +111,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_check_counter_branch() {
+	public void testBranch() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.BRANCH.name());
 		limit.setMaximum("-1");
@@ -126,7 +121,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_counter_line() {
+	public void testLine() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.LINE.name());
 		limit.setMaximum("-1");
@@ -136,7 +131,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_counter_complexity() {
+	public void testComlexity() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.COMPLEXITY.name());
 		limit.setMaximum("-1");
@@ -146,7 +141,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_counter_class() {
+	public void testClass() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.CLASS.name());
 		limit.setMaximum("-1");
@@ -156,7 +151,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_on_counter_method() {
+	public void testMethod() {
 		limit.setValue(CounterValue.TOTALCOUNT.name());
 		limit.setCounter(CounterEntity.METHOD.name());
 		limit.setMaximum("-1");
@@ -166,7 +161,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_pass_with_NaN_ratio() {
+	public void testNoRatio() {
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.COUNTER_0_0;
@@ -175,7 +170,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_pass_when_no_limits_given() {
+	public void testNoLimits() {
 		assertNull(limit.check(new TestNode() {
 			{
 				instructionCounter = CounterImpl.getInstance(1000, 0);
@@ -184,14 +179,14 @@ public class LimitTest {
 	}
 
 	@Test
-	public void setMinimum_should_allow_null() {
+	public void testMin0() {
 		limit.setMinimum("0");
 		limit.setMinimum((String) null);
 		assertNull(limit.getMinimum());
 	}
 
 	@Test
-	public void check_should_pass_when_minimum_is_fulfilled() {
+	public void testMin1() {
 		limit.setMinimum("0.35");
 		assertEquals("0.35", limit.getMinimum());
 		assertNull(limit.check(new TestNode() {
@@ -202,7 +197,18 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_when_minimum_is_not_met() {
+	public void testMin2() {
+		limit.setMinimum("0.35");
+		assertEquals("0.35", limit.getMinimum());
+		assertNull(limit.check(new TestNode() {
+			{
+				instructionCounter = CounterImpl.getInstance(64, 36);
+			}
+		}));
+	}
+
+	@Test
+	public void testMin3() {
 		limit.setMinimum("0.3500");
 		assertEquals("0.3500", limit.getMinimum());
 		assertEquals(
@@ -215,7 +221,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_report_actual_ratio_rounded_down_when_minimum_is_not_met() {
+	public void testMin4() {
 		limit.setMinimum("0.35");
 		assertEquals("0.35", limit.getMinimum());
 		assertEquals(
@@ -229,7 +235,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_report_counter_with_given_precision() {
+	public void testMin5() {
 		limit.setMinimum("10000");
 		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("10000", limit.getMinimum());
@@ -243,25 +249,20 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_when_minimum_ratio_is_smaller_than_0() {
-		limit.setMinimum("-3");
-		assertEquals("-3", limit.getMinimum());
+	public void testMin6() {
+		limit.setMinimum("12345");
+		assertEquals("12345", limit.getMinimum());
 		assertEquals(
-				"given minimum ratio is -3, but must be between 0.0 and 1.0",
-				limit.check(new TestNode()));
+				"instructions covered ratio is 0, but expected minimum is 12345",
+				limit.check(new TestNode() {
+					{
+						instructionCounter = CounterImpl.getInstance(1, 999);
+					}
+				}));
 	}
 
 	@Test
-	public void check_should_fail_when_minimum_ratio_is_bigger_than_1() {
-		limit.setMinimum("80");
-		assertEquals("80", limit.getMinimum());
-		assertEquals(
-				"given minimum ratio is 80, but must be between 0.0 and 1.0",
-				limit.check(new TestNode()));
-	}
-
-	@Test
-	public void setMinimum_should_accept_percentage_string() {
+	public void testMinPercent() {
 		limit.setMinimum("1.55%");
 		assertEquals("0.0155", limit.getMinimum());
 
@@ -276,14 +277,14 @@ public class LimitTest {
 	}
 
 	@Test
-	public void setMaximum_should_allow_null() {
+	public void testMax0() {
 		limit.setMaximum("0");
 		limit.setMaximum((String) null);
 		assertNull(limit.getMaximum());
 	}
 
 	@Test
-	public void check_should_pass_when_maximum_counter_is_fulfilled() {
+	public void testMax1() {
 		limit.setMaximum("12345678");
 		limit.setValue(CounterValue.MISSEDCOUNT.name());
 		assertEquals("12345678", limit.getMaximum());
@@ -295,7 +296,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_pass_when_maximum_ratio_is_fulfilled() {
+	public void testMax2() {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
 		assertNull(limit.check(new TestNode() {
@@ -306,7 +307,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_when_maximum_is_not_met() {
+	public void testMax3() {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
@@ -319,7 +320,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_report_actual_ratio_rounded_up_when_maximum_is_not_met() {
+	public void testMax4() {
 		limit.setMaximum("0.999");
 		assertEquals("0.999", limit.getMaximum());
 		assertEquals(
@@ -333,25 +334,7 @@ public class LimitTest {
 	}
 
 	@Test
-	public void check_should_fail_when_maximum_ratio_is_smaller_than_0() {
-		limit.setMaximum("-3");
-		assertEquals("-3", limit.getMaximum());
-		assertEquals(
-				"given maximum ratio is -3, but must be between 0.0 and 1.0",
-				limit.check(new TestNode()));
-	}
-
-	@Test
-	public void check_should_fail_when_maximum_ratio_is_bigger_than_1() {
-		limit.setMaximum("80");
-		assertEquals("80", limit.getMaximum());
-		assertEquals(
-				"given maximum ratio is 80, but must be between 0.0 and 1.0",
-				limit.check(new TestNode()));
-	}
-
-	@Test
-	public void setMaximum_should_accept_percentage_string() {
+	public void testMaxPercent() {
 		limit.setMaximum("1.55%");
 		assertEquals("0.0155", limit.getMaximum());
 

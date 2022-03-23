@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -64,16 +63,16 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		}
 
 		@Override
-		public void visitJumpInsnWithProbe(int opcode, Label label, int probeId,
-				IFrame frame) {
+		public void visitJumpInsnWithProbe(int opcode, Label label,
+				int probeId, IFrame frame) {
 			rec("visitJumpInsnWithProbe", Integer.valueOf(opcode), label,
 					Integer.valueOf(probeId));
 			frame.accept(this);
 		}
 
 		@Override
-		public void visitTableSwitchInsnWithProbes(int min, int max, Label dflt,
-				Label[] labels, IFrame frame) {
+		public void visitTableSwitchInsnWithProbes(int min, int max,
+				Label dflt, Label[] labels, IFrame frame) {
 			rec("visitTableSwitchInsnWithProbes", Integer.valueOf(min),
 					Integer.valueOf(max), dflt, labels);
 			frame.accept(this);
@@ -171,10 +170,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 
 		adapter.visitJumpInsn(Opcodes.GOTO, label);
 
-		expectedVisitor.visitJumpInsnWithProbe(Opcodes.GOTO, label, 1000,
-				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor
+				.visitJumpInsnWithProbe(Opcodes.GOTO, label, 1000, frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 	}
 
 	@Test
@@ -186,10 +185,10 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		adapter.visitJumpInsn(Opcodes.IFLT, label);
 
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
-		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000,
-				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor
+				.visitJumpInsnWithProbe(Opcodes.IFLT, label, 1000, frame);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 	}
 
 	@Test
@@ -214,8 +213,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitJumpInsnWithProbe(Opcodes.IF_ICMPEQ, label, 1000,
 				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 	}
 
 	@Test
@@ -231,8 +230,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
 				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -250,8 +249,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitLookupSwitchInsnWithProbes(label, keys, labels,
 				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}
@@ -279,8 +278,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
 				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(1000, LabelInfo.getProbeId(label));
 	}
 
@@ -297,8 +296,8 @@ public class MethodProbesAdapterTest implements IProbeIdGenerator {
 		expectedVisitor.visitInsn(Opcodes.ICONST_0);
 		expectedVisitor.visitTableSwitchInsnWithProbes(0, 1, label, labels,
 				frame);
-		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" }, 0,
-				null);
+		expectedVisitor.visitFrame(Opcodes.F_FULL, 1, new Object[] { "Foo" },
+				0, null);
 		assertEquals(LabelInfo.NO_PROBE, LabelInfo.getProbeId(label));
 		assertEquals(1000, LabelInfo.getProbeId(label2));
 	}

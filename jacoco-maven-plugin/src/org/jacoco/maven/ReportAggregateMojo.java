@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    John Oliver, Marc R. Hoffmann, Jan Wloka - initial API and implementation
@@ -39,18 +38,18 @@ import org.jacoco.report.IReportGroupVisitor;
  * reports when tests are in separate projects than the code under test, for
  * example in case of integration tests.
  * </p>
- *
+ * 
  * <p>
  * Using the dependency scope allows to distinguish projects which contribute
  * execution data but should not become part of the report:
  * </p>
- *
+ * 
  * <ul>
  * <li><code>compile</code>, <code>runtime</code>, <code>provided</code>:
  * Project source and execution data is included in the report.</li>
  * <li><code>test</code>: Only execution data is considered for the report.</li>
  * </ul>
- *
+ * 
  * @since 0.7.7
  */
 @Mojo(name = "report-aggregate", threadSafe = true)
@@ -107,7 +106,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 
 		final FileFilter filter = new FileFilter(dataFileIncludes,
 				dataFileExcludes);
-		loadExecutionData(support, filter, project.getBasedir());
+		loadExecutionData(support, filter, getProject().getBasedir());
 		for (final MavenProject dependency : findDependencies(
 				Artifact.SCOPE_COMPILE, Artifact.SCOPE_RUNTIME,
 				Artifact.SCOPE_PROVIDED, Artifact.SCOPE_TEST)) {
@@ -123,8 +122,10 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	File getOutputDirectory() {
-		return outputDirectory;
+	void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		support.addAllFormatters(outputDirectory, outputEncoding, footer,
+				locale);
 	}
 
 	@Override
@@ -139,13 +140,16 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		}
 	}
 
-	public File getReportOutputDirectory() {
-		return outputDirectory;
+	@Override
+	protected String getOutputDirectory() {
+		return outputDirectory.getAbsolutePath();
 	}
 
+	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null && !reportOutputDirectory
-				.getAbsolutePath().endsWith("jacoco-aggregate")) {
+		if (reportOutputDirectory != null
+				&& !reportOutputDirectory.getAbsolutePath().endsWith(
+						"jacoco-aggregate")) {
 			outputDirectory = new File(reportOutputDirectory,
 					"jacoco-aggregate");
 		} else {
@@ -164,7 +168,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 	private List<MavenProject> findDependencies(final String... scopes) {
 		final List<MavenProject> result = new ArrayList<MavenProject>();
 		final List<String> scopeList = Arrays.asList(scopes);
-		for (final Object dependencyObject : project.getDependencies()) {
+		for (final Object dependencyObject : getProject().getDependencies()) {
 			final Dependency dependency = (Dependency) dependencyObject;
 			if (scopeList.contains(dependency.getScope())) {
 				final MavenProject project = findProjectFromReactor(dependency);
@@ -188,7 +192,7 @@ public class ReportAggregateMojo extends AbstractReportMojo {
 		try {
 			depVersionAsRange = VersionRange
 					.createFromVersionSpec(d.getVersion());
-		} catch (final InvalidVersionSpecificationException e) {
+		} catch (InvalidVersionSpecificationException e) {
 			throw new AssertionError(e);
 		}
 

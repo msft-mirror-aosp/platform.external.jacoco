@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -40,7 +39,7 @@ import org.jacoco.core.runtime.OfflineInstrumentationAccessGenerator;
  * this mode. Please consult <a href="offline.html">documentation</a> about
  * offline instrumentation before using this mode.
  * </p>
- *
+ * 
  * @since 0.6.2
  */
 @Mojo(name = "instrument", defaultPhase = LifecyclePhase.PROCESS_CLASSES, threadSafe = true)
@@ -55,27 +54,23 @@ public class InstrumentMojo extends AbstractJacocoMojo {
 
 	/**
 	 * A list of class files to exclude from instrumentation. May use wildcard
-	 * characters (* and ?). When not specified nothing will be excluded. Except
-	 * for performance optimization or technical corner cases this option is
-	 * normally not required. If you want to exclude classes from the report
-	 * please configure the <code>report</code> goal accordingly.
+	 * characters (* and ?). When not specified nothing will be excluded.
 	 */
 	@Parameter
 	private List<String> excludes;
 
 	@Override
-	public void executeMojo()
-			throws MojoExecutionException, MojoFailureException {
-		final File originalClassesDir = new File(
-				getProject().getBuild().getDirectory(),
-				"generated-classes/jacoco");
+	public void executeMojo() throws MojoExecutionException,
+			MojoFailureException {
+		final File originalClassesDir = new File(getProject().getBuild()
+				.getDirectory(), "generated-classes/jacoco");
 		originalClassesDir.mkdirs();
 		final File classesDir = new File(
 				getProject().getBuild().getOutputDirectory());
 		if (!classesDir.exists()) {
 			getLog().info(
-					"Skipping JaCoCo execution due to missing classes directory:"
-							+ classesDir);
+					"Skipping JaCoCo execution due to missing classes directory:" +
+					classesDir);
 			return;
 		}
 
