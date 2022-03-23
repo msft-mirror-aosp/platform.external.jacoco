@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -29,7 +28,7 @@ import org.jacoco.report.IReportGroupVisitor;
  * <li>bound to <code>report-integration</code> phase</li>
  * <li>different <code>dataFile</code></li>
  * </ul>
- *
+ * 
  * @since 0.6.4
  */
 @Mojo(name = "report-integration", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
@@ -58,7 +57,7 @@ public class ReportITMojo extends AbstractReportMojo {
 
 	@Override
 	boolean canGenerateReportRegardingClassesDirectory() {
-		return new File(project.getBuild().getOutputDirectory()).exists();
+		return new File(getProject().getBuild().getOutputDirectory()).exists();
 	}
 
 	@Override
@@ -67,24 +66,29 @@ public class ReportITMojo extends AbstractReportMojo {
 	}
 
 	@Override
-	File getOutputDirectory() {
-		return outputDirectory;
+	void addFormatters(final ReportSupport support, final Locale locale)
+			throws IOException {
+		support.addAllFormatters(outputDirectory, outputEncoding, footer,
+				locale);
 	}
 
 	@Override
 	void createReport(final IReportGroupVisitor visitor,
 			final ReportSupport support) throws IOException {
-		support.processProject(visitor, title, project, getIncludes(),
+		support.processProject(visitor, title, getProject(), getIncludes(),
 				getExcludes(), sourceEncoding);
 	}
 
-	public File getReportOutputDirectory() {
-		return outputDirectory;
+	@Override
+	protected String getOutputDirectory() {
+		return outputDirectory.getAbsolutePath();
 	}
 
+	@Override
 	public void setReportOutputDirectory(final File reportOutputDirectory) {
-		if (reportOutputDirectory != null && !reportOutputDirectory
-				.getAbsolutePath().endsWith("jacoco-it")) {
+		if (reportOutputDirectory != null
+				&& !reportOutputDirectory.getAbsolutePath().endsWith(
+						"jacoco-it")) {
 			outputDirectory = new File(reportOutputDirectory, "jacoco-it");
 		} else {
 			outputDirectory = reportOutputDirectory;

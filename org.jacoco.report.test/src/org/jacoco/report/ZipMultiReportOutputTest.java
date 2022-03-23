@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report;
 
@@ -109,9 +108,8 @@ public class ZipMultiReportOutputTest {
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(
-				new HashSet<String>(
-						Arrays.asList("dir/index.html", "readme.txt")),
-				entries.keySet());
+				new HashSet<String>(Arrays.asList("dir/index.html",
+						"readme.txt")), entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
@@ -132,9 +130,8 @@ public class ZipMultiReportOutputTest {
 
 		final Map<String, byte[]> entries = readEntries();
 		assertEquals(
-				new HashSet<String>(
-						Arrays.asList("dir/index.html", "readme.txt")),
-				entries.keySet());
+				new HashSet<String>(Arrays.asList("dir/index.html",
+						"readme.txt")), entries.keySet());
 		assertArrayEquals(content1, entries.get("dir/index.html"));
 		assertArrayEquals(content2, entries.get("readme.txt"));
 	}
@@ -186,8 +183,8 @@ public class ZipMultiReportOutputTest {
 			while ((b = input.read()) != -1) {
 				entryBuffer.write(b);
 			}
-			byte[] old = entries.put(entry.getName(),
-					entryBuffer.toByteArray());
+			byte[] old = entries
+					.put(entry.getName(), entryBuffer.toByteArray());
 			assertNull("Duplicate entry " + entry.getName(), old);
 		}
 		return entries;

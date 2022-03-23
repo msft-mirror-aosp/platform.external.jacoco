@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.flow;
 
@@ -37,7 +36,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 
 	/**
 	 * Create a new adapter instance.
-	 *
+	 * 
 	 * @param probesVisitor
 	 *            visitor to delegate to
 	 * @param idGenerator
@@ -54,7 +53,7 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	/**
 	 * If an analyzer is set {@link IFrame} handles are calculated and emitted
 	 * to the probes methods.
-	 *
+	 * 
 	 * @param analyzer
 	 *            optional analyzer to set
 	 */
@@ -65,8 +64,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	@Override
 	public void visitTryCatchBlock(final Label start, final Label end,
 			final Label handler, final String type) {
-		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start),
-				getTryCatchLabel(end), handler, type);
+		probesVisitor.visitTryCatchBlock(getTryCatchLabel(start), getTryCatchLabel(end),
+				handler, type);
 	}
 
 	private Label getTryCatchLabel(Label label) {
@@ -155,8 +154,8 @@ public final class MethodProbesAdapter extends MethodVisitor {
 	public void visitTableSwitchInsn(final int min, final int max,
 			final Label dflt, final Label... labels) {
 		if (markLabels(dflt, labels)) {
-			probesVisitor.visitTableSwitchInsnWithProbes(min, max, dflt, labels,
-					frame(1));
+			probesVisitor.visitTableSwitchInsnWithProbes(min, max, dflt,
+					labels, frame(1));
 		} else {
 			probesVisitor.visitTableSwitchInsn(min, max, dflt, labels);
 		}
