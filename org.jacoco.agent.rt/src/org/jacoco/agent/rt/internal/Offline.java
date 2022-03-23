@@ -1,18 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.agent.rt.internal;
 
-// BEGIN android-change
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -20,17 +18,14 @@ import java.nio.channels.FileChannel;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-// END android-change
 import java.util.Properties;
 
-// BEGIN android-change
 import org.jacoco.core.data.ExecutionData;
 import org.jacoco.core.data.ExecutionDataWriter;
 import org.jacoco.core.data.ExecutionDataDelegate;
 import org.jacoco.core.data.IExecutionData;
 import org.jacoco.core.data.ExecutionDataStore;
 import org.jacoco.core.data.MappedExecutionData;
-// END android-change
 import org.jacoco.core.runtime.AgentOptions;
 import org.jacoco.core.runtime.RuntimeData;
 
@@ -41,35 +36,28 @@ import org.jacoco.core.runtime.RuntimeData;
 public final class Offline {
 
 	// BEGIN android-change
+	// private static final RuntimeData DATA;
 	private static final Map<Long, ExecutionDataDelegate> DATA = new HashMap<Long, ExecutionDataDelegate>();
 	private static FileChannel CHANNEL;
 	// END android-change
 	private static final String CONFIG_RESOURCE = "/jacoco-agent.properties";
+
+	// BEGIN android-change
+	// static {
+	//	 final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
+	//			System.getProperties());
+	//	 DATA = Agent.getInstance(new AgentOptions(config)).getData();
+	// }
+	// END android-change
 
 	private Offline() {
 		// no instances
 	}
 
 	// BEGIN android-change
-	//private static RuntimeData data;
-	/*
-	private static synchronized RuntimeData getRuntimeData() {
-		if (data == null) {
-			final Properties config = ConfigLoader.load(CONFIG_RESOURCE,
-					System.getProperties());
-			try {
-				data = Agent.getInstance(new AgentOptions(config)).getData();
-			} catch (final Exception e) {
-				throw new RuntimeException("Failed to initialize JaCoCo.", e);
-			}
-		}
-		return data;
-	}
-	*/
-
 	/**
 	 * API for offline instrumented classes.
-	 *
+	 * 
 	 * @param classid
 	 *            class identifier
 	 * @param classname
@@ -80,9 +68,8 @@ public final class Offline {
 	 */
 	public static IExecutionData getExecutionData(final long classid,
 			final String classname, final int probecount) {
-		//return getRuntimeData()
-		//		.getExecutionData(Long.valueOf(classid), classname, probecount)
-		//		.getProbes();
+		// return DATA.getExecutionData(Long.valueOf(classid), classname,
+		//		probecount).getProbes();
 		synchronized (DATA) {
 			ExecutionDataDelegate entry = DATA.get(classid);
 			if (entry == null) {
@@ -138,6 +125,7 @@ public final class Offline {
 		// Read /proc/self and resolve it to obtain its pid.
 		return Integer.parseInt(new File("/proc/self").getCanonicalFile().getName());
 	}
+	// END android-change
 
 	/**
 	 * Creates a default agent, using config loaded from the classpath resource and the system
@@ -155,11 +143,7 @@ public final class Offline {
 			for (IExecutionData data : DATA.values()) {
 				store.put(data);
 			}
-			try {
-				return Agent.getInstance(new AgentOptions(config), new RuntimeData(store));
-			} catch (final Exception e) {
-				throw new RuntimeException("Failed to initialize JaCoCo.", e);
-			}
+			return Agent.getInstance(new AgentOptions(config), new RuntimeData(store));
 		}
 	}
 	// END android-change
