@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.internal.xml;
 
@@ -33,7 +32,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a <code>report</code> root element for a XML report.
-	 *
+	 * 
 	 * @param name
 	 *            value for the name attribute
 	 * @param encoding
@@ -68,7 +67,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'sessioninfo' element.
-	 *
+	 * 
 	 * @param info
 	 *            info object to write out
 	 * @throws IOException
@@ -83,7 +82,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'group' element.
-	 *
+	 * 
 	 * @param name
 	 *            value for the name attribute
 	 * @return 'group' element
@@ -96,7 +95,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'package' element.
-	 *
+	 * 
 	 * @param name
 	 *            value for the name attribute
 	 * @return 'package' element
@@ -109,7 +108,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'class' element.
-	 *
+	 * 
 	 * @param coverage
 	 *            class coverage node to write out
 	 * @return 'class' element
@@ -125,7 +124,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'method' element.
-	 *
+	 * 
 	 * @param coverage
 	 *            method coverage node to write out
 	 * @return 'method' element
@@ -146,7 +145,7 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'sourcefile' element.
-	 *
+	 * 
 	 * @param name
 	 *            value for the name attribute
 	 * @return 'sourcefile' element
@@ -159,12 +158,12 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'line' element.
-	 *
+	 * 
 	 * @param nr
 	 *            line number
 	 * @param line
 	 *            line object to write out
-	 *
+	 * 
 	 * @throws IOException
 	 *             in case of problems with the underlying output
 	 */
@@ -177,13 +176,13 @@ public class ReportElement extends XMLElement {
 
 	/**
 	 * Creates a 'counter' element.
-	 *
+	 * 
 	 * @param counterEntity
 	 *            entity of this counter
-	 *
+	 * 
 	 * @param counter
 	 *            counter object to write out
-	 *
+	 * 
 	 * @throws IOException
 	 *             in case of problems with the underlying output
 	 */

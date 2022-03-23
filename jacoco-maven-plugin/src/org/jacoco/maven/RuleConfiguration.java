@@ -1,16 +1,15 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
  *    Kyle Lieber - implementation of CheckMojo
  *    Marc Hoffmann - redesign using report APIs
- *
+ *    
  *******************************************************************************/
 package org.jacoco.maven;
 
@@ -23,7 +22,7 @@ import org.jacoco.report.check.Rule;
 
 /**
  * Wrapper for {@link Rule} objects to allow Maven style includes/excludes lists
- *
+ * 
  */
 public class RuleConfiguration {
 
@@ -38,8 +37,8 @@ public class RuleConfiguration {
 
 	/**
 	 * @param element
-	 *            element type this rule applies to TODO: use ElementType
-	 *            directly once Maven 3 is required.
+	 *            element type this rule applies to
+	 * TODO: use ElementType directly once Maven 3 is required.
 	 */
 	public void setElement(final String element) {
 		rule.setElement(ElementType.valueOf(element));
@@ -54,7 +53,7 @@ public class RuleConfiguration {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param excludes
 	 *            excludes patterns
 	 */
