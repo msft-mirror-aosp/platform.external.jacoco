@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -23,8 +22,7 @@ public abstract class CounterImpl implements ICounter {
 	/** Max counter value for which singletons are created */
 	private static final int SINGLETON_LIMIT = 30;
 
-	private static final CounterImpl[][] SINGLETONS = new CounterImpl[SINGLETON_LIMIT
-			+ 1][];
+	private static final CounterImpl[][] SINGLETONS = new CounterImpl[SINGLETON_LIMIT + 1][];
 
 	static {
 		for (int i = 0; i <= SINGLETON_LIMIT; i++) {
@@ -76,7 +74,7 @@ public abstract class CounterImpl implements ICounter {
 
 	/**
 	 * Factory method to retrieve a counter with the given number of items.
-	 *
+	 * 
 	 * @param missed
 	 *            number of missed items
 	 * @param covered
@@ -93,7 +91,7 @@ public abstract class CounterImpl implements ICounter {
 
 	/**
 	 * Factory method to retrieve a clone of the given counter.
-	 *
+	 * 
 	 * @param counter
 	 *            counter to copy
 	 * @return counter instance
@@ -110,7 +108,7 @@ public abstract class CounterImpl implements ICounter {
 
 	/**
 	 * Creates a new instance with the given numbers.
-	 *
+	 * 
 	 * @param missed
 	 *            number of missed items
 	 * @param covered
@@ -125,7 +123,7 @@ public abstract class CounterImpl implements ICounter {
 	 * Returns a counter with values incremented by the numbers of the given
 	 * counter. It is up to the implementation whether this counter instance is
 	 * modified or a new instance is returned.
-	 *
+	 * 
 	 * @param counter
 	 *            number of additional total and covered items
 	 * @return counter instance with incremented values
@@ -138,7 +136,7 @@ public abstract class CounterImpl implements ICounter {
 	 * Returns a counter with values incremented by the given numbers. It is up
 	 * to the implementation whether this counter instance is modified or a new
 	 * instance is returned.
-	 *
+	 * 
 	 * @param missed
 	 *            number of missed items
 	 * @param covered

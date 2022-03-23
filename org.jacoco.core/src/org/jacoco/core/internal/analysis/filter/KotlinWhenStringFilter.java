@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -33,7 +32,8 @@ public final class KotlinWhenStringFilter implements IFilter {
 	public void filter(final MethodNode methodNode,
 			final IFilterContext context, final IFilterOutput output) {
 		final Matcher matcher = new Matcher();
-		for (final AbstractInsnNode i : methodNode.instructions) {
+		for (AbstractInsnNode i = methodNode.instructions
+				.getFirst(); i != null; i = i.getNext()) {
 			matcher.match(i, output);
 		}
 	}
@@ -67,14 +67,10 @@ public final class KotlinWhenStringFilter implements IFilter {
 				hashCodes = tableSwitch.labels.size();
 			}
 
-			if (hashCodes == 0) {
-				return;
-			}
-
 			final Set<AbstractInsnNode> replacements = new HashSet<AbstractInsnNode>();
 			replacements.add(skipNonOpcodes(defaultLabel));
 
-			for (int i = 1; i <= hashCodes; i++) {
+			for (int i = 0; i < hashCodes; i++) {
 				while (true) {
 					nextIsVar(Opcodes.ALOAD, "s");
 					nextIs(Opcodes.LDC);
@@ -83,24 +79,18 @@ public final class KotlinWhenStringFilter implements IFilter {
 					// jump to next comparison or default case
 					nextIs(Opcodes.IFEQ);
 					final JumpInsnNode jump = (JumpInsnNode) cursor;
-					next();
+					// jump to case
+					nextIs(Opcodes.GOTO);
 					if (cursor == null) {
 						return;
-					} else if (cursor.getOpcode() == Opcodes.GOTO) {
-						// jump to case body
-						replacements.add(
-								skipNonOpcodes(((JumpInsnNode) cursor).label));
-						if (jump.label == defaultLabel) {
-							// end of comparisons for same hashCode
-							break;
-						}
-					} else if (i == hashCodes && jump.label == defaultLabel) {
-						// case body
-						replacements.add(cursor);
-						cursor = jump;
+					}
+
+					replacements
+							.add(skipNonOpcodes(((JumpInsnNode) cursor).label));
+
+					if (jump.label == defaultLabel) {
+						// end of comparisons for same hashCode
 						break;
-					} else {
-						return;
 					}
 				}
 			}
