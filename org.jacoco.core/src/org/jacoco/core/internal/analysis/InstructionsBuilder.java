@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -47,7 +46,7 @@ class InstructionsBuilder {
 
 	/**
 	 * The labels which mark the subsequent instructions.
-	 *
+	 * 
 	 * Due to ASM issue #315745 there can be more than one label per instruction
 	 */
 	private final List<Label> currentLabel;
@@ -61,7 +60,7 @@ class InstructionsBuilder {
 	/**
 	 * Creates a new builder instance which can be used to analyze a single
 	 * method.
-	 *
+	 * 
 	 * @param probes
 	 *            probe array of the corresponding class used to determine the
 	 *            coverage status of every instruction.
@@ -127,7 +126,7 @@ class InstructionsBuilder {
 
 	/**
 	 * Adds a jump from the last added instruction.
-	 *
+	 * 
 	 * @param target
 	 *            jump target
 	 * @param branch
@@ -139,7 +138,7 @@ class InstructionsBuilder {
 
 	/**
 	 * Adds a new probe for the last instruction.
-	 *
+	 * 
 	 * @param probeId
 	 *            index in the probe array
 	 * @param branch
@@ -153,7 +152,7 @@ class InstructionsBuilder {
 	/**
 	 * Returns the status for all instructions of this method. This method must
 	 * be called exactly once after the instructions have been added.
-	 *
+	 * 
 	 * @return map of ASM instruction nodes to corresponding {@link Instruction}
 	 *         instances
 	 */

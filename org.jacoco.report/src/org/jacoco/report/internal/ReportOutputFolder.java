@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.internal;
 
@@ -38,7 +37,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a new root folder for the given output.
-	 *
+	 * 
 	 * @param output
 	 *            output for generated files
 	 */
@@ -48,7 +47,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a new root folder for the given output.
-	 *
+	 * 
 	 * @param output
 	 *            output for generated files
 	 */
@@ -62,7 +61,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Creates a sub-folder with the given name.
-	 *
+	 * 
 	 * @param name
 	 *            name of the sub-folder
 	 * @return handle for output into the sub-folder
@@ -73,15 +72,15 @@ public class ReportOutputFolder {
 		if (folder != null) {
 			return folder;
 		}
-		folder = new ReportOutputFolder(output, this,
-				path + normalizedName + "/");
+		folder = new ReportOutputFolder(output, this, path + normalizedName
+				+ "/");
 		subFolders.put(normalizedName, folder);
 		return folder;
 	}
 
 	/**
 	 * Creates a new file in this folder with the given local name.
-	 *
+	 * 
 	 * @param name
 	 *            name of the sub-folder
 	 * @return handle for output into the sub-folder
@@ -94,7 +93,7 @@ public class ReportOutputFolder {
 
 	/**
 	 * Returns a link relative to a given base to a resource within this folder.
-	 *
+	 * 
 	 * @param base
 	 *            base to create the relative link from
 	 * @param name

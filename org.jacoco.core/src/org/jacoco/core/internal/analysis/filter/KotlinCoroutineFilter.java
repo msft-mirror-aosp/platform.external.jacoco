@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -20,7 +19,6 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 
@@ -29,11 +27,7 @@ import org.objectweb.asm.tree.TableSwitchInsnNode;
  */
 public final class KotlinCoroutineFilter implements IFilter {
 
-	static boolean isImplementationOfSuspendFunction(
-			final MethodNode methodNode) {
-		if (methodNode.name.startsWith("access$")) {
-			return false;
-		}
+	static boolean isLastArgumentContinuation(final MethodNode methodNode) {
 		final Type methodType = Type.getMethodType(methodNode.desc);
 		final int lastArgument = methodType.getArgumentTypes().length - 1;
 		return lastArgument >= 0 && "kotlin.coroutines.Continuation".equals(
@@ -48,41 +42,16 @@ public final class KotlinCoroutineFilter implements IFilter {
 		}
 
 		new Matcher().match(methodNode, output);
-		new Matcher().matchOptimizedTailCall(methodNode, output);
+
 	}
 
 	private static class Matcher extends AbstractMatcher {
-
-		private void matchOptimizedTailCall(final MethodNode methodNode,
-				final IFilterOutput output) {
-			for (final AbstractInsnNode i : methodNode.instructions) {
-				cursor = i;
-				nextIs(Opcodes.DUP);
-				nextIsInvoke(Opcodes.INVOKESTATIC,
-						"kotlin/coroutines/intrinsics/IntrinsicsKt",
-						"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
-				nextIs(Opcodes.IF_ACMPNE);
-				nextIs(Opcodes.ARETURN);
-				nextIs(Opcodes.POP);
-				if (cursor != null) {
-					output.ignore(i.getNext(), cursor);
-				}
-			}
-		}
-
 		private void match(final MethodNode methodNode,
 				final IFilterOutput output) {
-			cursor = skipNonOpcodes(methodNode.instructions.getFirst());
-			if (cursor == null || cursor.getOpcode() != Opcodes.INVOKESTATIC) {
-				cursor = null;
-			} else {
-				final MethodInsnNode m = (MethodInsnNode) cursor;
-				if (!"kotlin/coroutines/intrinsics/IntrinsicsKt".equals(m.owner)
-						|| !"getCOROUTINE_SUSPENDED".equals(m.name)
-						|| !"()Ljava/lang/Object;".equals(m.desc)) {
-					cursor = null;
-				}
-			}
+			cursor = methodNode.instructions.getFirst();
+			nextIsInvoke(Opcodes.INVOKESTATIC,
+					"kotlin/coroutines/intrinsics/IntrinsicsKt",
+					"getCOROUTINE_SUSPENDED", "()Ljava/lang/Object;");
 
 			if (cursor == null) {
 				cursor = skipNonOpcodes(methodNode.instructions.getFirst());

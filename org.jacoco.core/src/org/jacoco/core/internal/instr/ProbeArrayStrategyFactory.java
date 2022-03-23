@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -51,13 +50,10 @@ public final class ProbeArrayStrategyFactory {
 			if (counter.getCount() == 0) {
 				return new NoneProbeArrayStrategy();
 			}
-// BEGIN android-change
-			// See https://github.com/jacoco/jacoco/issues/1151
-			// if (version >= Opcodes.V11 && counter.hasMethods()) {
-			// 	return new CondyProbeArrayStrategy(className, true, classId,
-			// 			accessorGenerator);
-			// }
-// END android-change
+			if (version >= Opcodes.V11 && counter.hasMethods()) {
+				return new CondyProbeArrayStrategy(className, true, classId,
+						accessorGenerator);
+			}
 			if (version >= Opcodes.V1_8 && counter.hasMethods()) {
 				return new InterfaceFieldProbeArrayStrategy(className, classId,
 						counter.getCount(), accessorGenerator);
@@ -66,13 +62,10 @@ public final class ProbeArrayStrategyFactory {
 						counter.getCount(), accessorGenerator);
 			}
 		} else {
-// BEGIN android-change
-			// See https://github.com/jacoco/jacoco/issues/1151
-			// if (version >= Opcodes.V11) {
-			// 	return new CondyProbeArrayStrategy(className, false, classId,
-			// 			accessorGenerator);
-			// }
-// END android-change
+			if (version >= Opcodes.V11) {
+				return new CondyProbeArrayStrategy(className, false, classId,
+						accessorGenerator);
+			}
 			return new ClassFieldProbeArrayStrategy(className, classId,
 					InstrSupport.needsFrames(version), accessorGenerator);
 		}

@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -96,8 +95,7 @@ public class AgentOptionsTest {
 		assertFalse(options.getAppend());
 		assertEquals("org.*:com.*", options.getIncludes());
 		assertEquals("*Test", options.getExcludes());
-		assertEquals("org.jacoco.test.TestLoader",
-				options.getExclClassloader());
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
 		assertTrue(options.getInclBootstrapClasses());
 		assertTrue(options.getInclNoLocationClasses());
 		assertEquals("testsession", options.getSessionId());
@@ -161,16 +159,14 @@ public class AgentOptionsTest {
 	public void testGetExclClassloader() {
 		AgentOptions options = new AgentOptions(
 				"exclclassloader=org.jacoco.test.TestLoader");
-		assertEquals("org.jacoco.test.TestLoader",
-				options.getExclClassloader());
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
 	}
 
 	@Test
 	public void testSetExclClassloader() {
 		AgentOptions options = new AgentOptions();
 		options.setExclClassloader("org.jacoco.test.TestLoader");
-		assertEquals("org.jacoco.test.TestLoader",
-				options.getExclClassloader());
+		assertEquals("org.jacoco.test.TestLoader", options.getExclClassloader());
 		assertEquals("exclclassloader=org.jacoco.test.TestLoader",
 				options.toString());
 	}
@@ -421,8 +417,9 @@ public class AgentOptionsTest {
 
 		String vmArgument = options.getVMArgument(defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s=append=true",
-				defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s=append=true",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test
@@ -455,21 +452,22 @@ public class AgentOptionsTest {
 		String vmArgument = options.prependVMArguments("a b c",
 				defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s= a b c",
-				defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s= a b c",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test
 	public void testPrependVMArgumentsReplace() {
 		AgentOptions options = new AgentOptions();
 
-		String vmArgument = options.prependVMArguments(
-				String.format("a b -javaagent:%s=append=false c",
-						defaultAgentJarFile),
+		String vmArgument = options.prependVMArguments(String.format(
+				"a b -javaagent:%s=append=false c", defaultAgentJarFile),
 				defaultAgentJarFile);
 
-		assertEquals(String.format("-javaagent:%s= a b c",
-				defaultAgentJarFile.toString()), vmArgument);
+		assertEquals(
+				String.format("-javaagent:%s= a b c",
+						defaultAgentJarFile.toString()), vmArgument);
 	}
 
 	@Test

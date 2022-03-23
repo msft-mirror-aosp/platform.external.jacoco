@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.internal.html.page;
 
@@ -39,8 +38,7 @@ public class ReportPageTest extends PageTestBase {
 		private final String label;
 		private final String style;
 
-		protected TestReportPage(String label, String style,
-				ReportPage parent) {
+		protected TestReportPage(String label, String style, ReportPage parent) {
 			super(parent, rootFolder, ReportPageTest.this.context);
 			this.label = label;
 			this.style = style;

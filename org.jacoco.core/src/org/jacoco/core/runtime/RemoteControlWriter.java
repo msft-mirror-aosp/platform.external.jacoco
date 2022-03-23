@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -20,8 +19,8 @@ import org.jacoco.core.data.ExecutionDataWriter;
 /**
  * {@link ExecutionDataWriter} with commands added for runtime remote control.
  */
-public class RemoteControlWriter extends ExecutionDataWriter
-		implements IRemoteCommandVisitor {
+public class RemoteControlWriter extends ExecutionDataWriter implements
+		IRemoteCommandVisitor {
 
 	/** Block identifier to confirm successful command execution. */
 	public static final byte BLOCK_CMDOK = 0x20;
@@ -31,7 +30,7 @@ public class RemoteControlWriter extends ExecutionDataWriter
 
 	/**
 	 * Creates a new writer based on the given output stream.
-	 *
+	 * 
 	 * @param output
 	 *            stream to write commands to
 	 * @throws IOException
@@ -44,7 +43,7 @@ public class RemoteControlWriter extends ExecutionDataWriter
 	/**
 	 * Sends a confirmation that a commands has been successfully executed and
 	 * the response is completed.
-	 *
+	 * 
 	 * @throws IOException
 	 *             in case of problems with the remote connection
 	 */
