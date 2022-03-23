@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.data;
 
@@ -21,12 +20,10 @@ import org.jacoco.core.internal.data.CompactDataOutput;
 /**
  * Serialization of execution data into binary streams.
  */
-public class ExecutionDataWriter
-		implements ISessionInfoVisitor, IExecutionDataVisitor {
+public class ExecutionDataWriter implements ISessionInfoVisitor,
+		IExecutionDataVisitor {
 
-	/**
-	 * File format version, will be incremented for each incompatible change.
-	 */
+	/** File format version, will be incremented for each incompatible change. */
 	public static final char FORMAT_VERSION;
 
 	static {
@@ -53,7 +50,7 @@ public class ExecutionDataWriter
 	 * Creates a new writer based on the given output stream. Depending on the
 	 * nature of the underlying stream output should be buffered as most data is
 	 * written in single bytes.
-	 *
+	 * 
 	 * @param output
 	 *            binary stream to write execution data to
 	 * @throws IOException
@@ -66,7 +63,7 @@ public class ExecutionDataWriter
 
 	/**
 	 * Writes an file header to identify the stream and its protocol version.
-	 *
+	 * 
 	 * @throws IOException
 	 *             if the header can't be written
 	 */
@@ -78,7 +75,7 @@ public class ExecutionDataWriter
 
 	/**
 	 * Flushes the underlying stream.
-	 *
+	 * 
 	 * @throws IOException
 	 *             if the underlying stream can't be flushed
 	 */
@@ -118,7 +115,7 @@ public class ExecutionDataWriter
 	 * Returns the first bytes of a file that represents a valid execution data
 	 * file. In any case every execution data file starts with the three bytes
 	 * <code>0x01 0xC0 0xC0</code>.
-	 *
+	 * 
 	 * @return first bytes of a execution data file
 	 */
 	public static final byte[] getFileHeader() {

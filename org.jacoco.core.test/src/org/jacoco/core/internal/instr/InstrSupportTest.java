@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.instr;
 
@@ -16,10 +15,11 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -36,6 +36,9 @@ public class InstrSupportTest {
 	private Printer printer;
 	private TraceMethodVisitor trace;
 
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
+
 	@Before
 	public void setup() {
 		printer = new Textifier();
@@ -43,8 +46,8 @@ public class InstrSupportTest {
 	}
 
 	@Test
-	public void classReaderFor_should_read_java_16_class() {
-		final byte[] bytes = createJava16Class();
+	public void classReaderFor_should_read_java_13_class() {
+		final byte[] bytes = createJava13Class();
 
 		final ClassReader classReader = InstrSupport.classReaderFor(bytes);
 
@@ -53,16 +56,16 @@ public class InstrSupportTest {
 			public void visit(final int version, final int access,
 					final String name, final String signature,
 					final String superName, final String[] interfaces) {
-				assertEquals(Opcodes.V16, version);
+				assertEquals(Opcodes.V12 + 1, version);
 			}
 		}, 0);
 
-		assertArrayEquals(createJava16Class(), bytes);
+		assertArrayEquals(createJava13Class(), bytes);
 	}
 
-	private static byte[] createJava16Class() {
+	private static byte[] createJava13Class() {
 		final ClassWriter cw = new ClassWriter(0);
-		cw.visit(Opcodes.V16, 0, "Foo", null, "java/lang/Object", null);
+		cw.visit(Opcodes.V12 + 1, 0, "Foo", null, "java/lang/Object", null);
 		cw.visitEnd();
 		return cw.toByteArray();
 	}
@@ -124,10 +127,7 @@ public class InstrSupportTest {
 		assertTrue(InstrSupport.needsFrames(Opcodes.V10));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V11));
 		assertTrue(InstrSupport.needsFrames(Opcodes.V12));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V13));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V14));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V15));
-		assertTrue(InstrSupport.needsFrames(Opcodes.V16));
+		assertTrue(InstrSupport.needsFrames(Opcodes.V12 + 1));
 
 		assertTrue(InstrSupport.needsFrames(0x0100));
 	}
@@ -139,26 +139,20 @@ public class InstrSupportTest {
 
 	@Test
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_data_field_is_present() {
-		try {
-			InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
-			fail("exception expected");
-		} catch (IllegalStateException e) {
-			assertEquals(
-					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
-					e.getMessage());
-		}
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage(
+				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
+
+		InstrSupport.assertNotInstrumented("$jacocoData", "Foo");
 	}
 
 	@Test
 	public void assertNotIntrumented_should_throw_exception_when_jacoco_init_method_is_present() {
-		try {
-			InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
-			fail("exception expected");
-		} catch (IllegalStateException e) {
-			assertEquals(
-					"Cannot process instrumented class Foo. Please supply original non-instrumented classes.",
-					e.getMessage());
-		}
+		exception.expect(IllegalStateException.class);
+		exception.expectMessage(
+				"Cannot process instrumented class Foo. Please supply original non-instrumented classes.");
+
+		InstrSupport.assertNotInstrumented("$jacocoInit", "Foo");
 	}
 
 	@Test

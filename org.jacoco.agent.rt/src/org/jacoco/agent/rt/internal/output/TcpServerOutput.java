@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.agent.rt.internal.output;
 
@@ -41,7 +40,7 @@ public class TcpServerOutput implements IAgentOutput {
 
 	/**
 	 * New controller instance.
-	 *
+	 * 
 	 * @param logger
 	 *            logger to use in case of exceptions is spawned threads
 	 */
@@ -95,7 +94,7 @@ public class TcpServerOutput implements IAgentOutput {
 
 	/**
 	 * Open a server socket based on the given configuration.
-	 *
+	 * 
 	 * @param options
 	 *            address and port configuration
 	 * @return opened server socket
@@ -109,7 +108,7 @@ public class TcpServerOutput implements IAgentOutput {
 
 	/**
 	 * Returns the {@link InetAddress} object to open the server socket on.
-	 *
+	 * 
 	 * @param address
 	 *            address specified as a string
 	 * @return address to open the server socket

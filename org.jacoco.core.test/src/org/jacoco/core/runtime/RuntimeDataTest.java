@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -30,7 +29,7 @@ import org.objectweb.asm.Type;
 
 /**
  * Unit tests for {@link RuntimeData}.
- *
+ * 
  */
 public class RuntimeDataTest {
 
@@ -139,8 +138,8 @@ public class RuntimeDataTest {
 
 		writer.visitEnd();
 		final TargetLoader loader = new TargetLoader();
-		Callable<?> callable = (Callable<?>) loader
-				.add("Sample", writer.toByteArray()).newInstance();
+		Callable<?> callable = (Callable<?>) loader.add("Sample",
+				writer.toByteArray()).newInstance();
 		final Object[] args = (Object[]) callable.call();
 		assertEquals(3, args.length, 0.0);
 		assertEquals(Long.valueOf(1000), args[0]);
@@ -150,8 +149,8 @@ public class RuntimeDataTest {
 
 	@Test
 	public void testGenerateAccessCall() throws Exception {
-		final boolean[] probes = data
-				.getExecutionData(Long.valueOf(1234), "Sample", 5).getProbes();
+		final boolean[] probes = data.getExecutionData(Long.valueOf(1234),
+				"Sample", 5).getProbes();
 
 		final ClassWriter writer = new ClassWriter(0);
 		writer.visit(Opcodes.V1_5, Opcodes.ACC_PUBLIC, "Sample", null,

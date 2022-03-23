@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.runtime;
 
@@ -45,12 +44,12 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	/**
 	 * Creates a new runtime based on the given class and members.
-	 *
+	 * 
 	 * @param systemClass
 	 *            system class that contains the execution data
 	 * @param accessFieldName
 	 *            name of the public static runtime access field
-	 *
+	 * 
 	 */
 	public ModifiedSystemClassRuntime(final Class<?> systemClass,
 			final String accessFieldName) {
@@ -86,13 +85,13 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
 	 * the data container. Member is created with internal default name. The
 	 * given class must not have been loaded before by the agent.
-	 *
+	 * 
 	 * @param inst
 	 *            instrumentation interface
 	 * @param className
 	 *            VM name of the class to use
 	 * @return new runtime instance
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 *             id the given class can not be found
 	 */
@@ -105,7 +104,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * Creates a new {@link ModifiedSystemClassRuntime} using the given class as
 	 * the data container. The given class must not have been loaded before by
 	 * the agent.
-	 *
+	 * 
 	 * @param inst
 	 *            instrumentation interface
 	 * @param className
@@ -113,7 +112,7 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 	 * @param accessFieldName
 	 *            name of the added runtime access field
 	 * @return new runtime instance
-	 *
+	 * 
 	 * @throws ClassNotFoundException
 	 *             if the given class can not be found
 	 */
@@ -121,10 +120,10 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 			final String className, final String accessFieldName)
 			throws ClassNotFoundException {
 		final ClassFileTransformer transformer = new ClassFileTransformer() {
-			public byte[] transform(final ClassLoader loader, final String name,
-					final Class<?> classBeingRedefined,
-					final ProtectionDomain protectionDomain,
-					final byte[] source) throws IllegalClassFormatException {
+			public byte[] transform(final ClassLoader loader,
+					final String name, final Class<?> classBeingRedefined,
+					final ProtectionDomain protectionDomain, final byte[] source)
+					throws IllegalClassFormatException {
 				if (name.equals(className)) {
 					return instrument(source, accessFieldName);
 				}
@@ -137,16 +136,15 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 		try {
 			clazz.getField(accessFieldName);
 		} catch (final NoSuchFieldException e) {
-			throw new RuntimeException(
-					format("Class %s could not be instrumented.", className),
-					e);
+			throw new RuntimeException(format(
+					"Class %s could not be instrumented.", className), e);
 		}
 		return new ModifiedSystemClassRuntime(clazz, accessFieldName);
 	}
 
 	/**
 	 * Adds the static data field to the given class definition.
-	 *
+	 * 
 	 * @param source
 	 *            class definition source
 	 * @param accessFieldName
@@ -171,10 +169,9 @@ public class ModifiedSystemClassRuntime extends AbstractRuntime {
 
 	private static void createDataField(final ClassVisitor visitor,
 			final String dataField) {
-		visitor.visitField(
-				Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC
-						| Opcodes.ACC_TRANSIENT,
-				dataField, ACCESS_FIELD_TYPE, null, null);
+		visitor.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC
+				| Opcodes.ACC_SYNTHETIC | Opcodes.ACC_TRANSIENT, dataField,
+				ACCESS_FIELD_TYPE, null, null);
 	}
 
 }
