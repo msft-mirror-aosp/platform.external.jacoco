@@ -58,7 +58,6 @@ license {
 
 java_library {
     name: "jacocoagent",
-    host_supported: true,
     installable: true,
 
     apex_available: [
