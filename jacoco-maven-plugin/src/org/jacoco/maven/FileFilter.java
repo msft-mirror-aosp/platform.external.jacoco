@@ -1,10 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Evgeny Mandrikov - initial API and implementation
@@ -17,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -33,21 +33,20 @@ public class FileFilter {
 
 	/**
 	 * Construct a new FileFilter
-	 *
+	 * 
 	 * @param includes
 	 *            list of includes patterns
 	 * @param excludes
 	 *            list of excludes patterns
 	 */
-	public FileFilter(final List<String> includes,
-			final List<String> excludes) {
+	public FileFilter(final List<String> includes, final List<String> excludes) {
 		this.includes = includes;
 		this.excludes = excludes;
 	}
 
 	/**
 	 * Returns a list of file names.
-	 *
+	 * 
 	 * @param directory
 	 *            the directory to scan
 	 * @return a list of files
@@ -61,7 +60,7 @@ public class FileFilter {
 
 	/**
 	 * Returns a list of files.
-	 *
+	 * 
 	 * @param directory
 	 *            the directory to scan
 	 * @return a list of files
@@ -74,7 +73,7 @@ public class FileFilter {
 
 	/**
 	 * Get the includes pattern
-	 *
+	 * 
 	 * @return the pattern
 	 */
 	public String getIncludes() {
@@ -83,7 +82,7 @@ public class FileFilter {
 
 	/**
 	 * Get the excludes pattern
-	 *
+	 * 
 	 * @return the pattern
 	 */
 	public String getExcludes() {
@@ -93,7 +92,7 @@ public class FileFilter {
 	private String buildPattern(final List<String> patterns,
 			final String defaultPattern) {
 		String pattern = defaultPattern;
-		if (patterns != null && !patterns.isEmpty()) {
+		if (CollectionUtils.isNotEmpty(patterns)) {
 			pattern = StringUtils.join(patterns.iterator(), ",");
 		}
 		return pattern;

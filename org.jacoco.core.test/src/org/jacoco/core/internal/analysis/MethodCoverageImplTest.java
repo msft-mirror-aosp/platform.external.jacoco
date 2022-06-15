@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.core.internal.analysis;
 
@@ -60,8 +59,8 @@ public class MethodCoverageImplTest {
 	@Test
 	public void testIncrementCoveredInstructions() {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
-		node.increment(CounterImpl.getInstance(12, 13), CounterImpl.COUNTER_0_0,
-				3);
+		node.increment(CounterImpl.getInstance(12, 13),
+				CounterImpl.COUNTER_0_0, 3);
 		node.incrementMethodCounter();
 		assertEquals(CounterImpl.COUNTER_0_1, node.getMethodCounter());
 		assertEquals(CounterImpl.COUNTER_0_1, node.getComplexityCounter());
@@ -79,8 +78,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(2, 0),
 				3);
-		assertEquals(CounterImpl.getInstance(1, 0),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), node.getComplexityCounter());
 	}
 
 	@Test
@@ -88,8 +86,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(1, 1),
 				3);
-		assertEquals(CounterImpl.getInstance(1, 0),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(1, 0), node.getComplexityCounter());
 	}
 
 	@Test
@@ -97,8 +94,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(0, 2),
 				3);
-		assertEquals(CounterImpl.getInstance(0, 1),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(0, 1), node.getComplexityCounter());
 	}
 
 	@Test
@@ -106,8 +102,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(3, 0),
 				3);
-		assertEquals(CounterImpl.getInstance(2, 0),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), node.getComplexityCounter());
 	}
 
 	@Test
@@ -115,8 +110,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(2, 1),
 				3);
-		assertEquals(CounterImpl.getInstance(2, 0),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(2, 0), node.getComplexityCounter());
 	}
 
 	@Test
@@ -124,8 +118,7 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(1, 2),
 				3);
-		assertEquals(CounterImpl.getInstance(1, 1),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(1, 1), node.getComplexityCounter());
 	}
 
 	@Test
@@ -133,7 +126,6 @@ public class MethodCoverageImplTest {
 		MethodCoverageImpl node = new MethodCoverageImpl("sample", "()V", null);
 		node.increment(CounterImpl.COUNTER_0_0, CounterImpl.getInstance(0, 3),
 				3);
-		assertEquals(CounterImpl.getInstance(0, 2),
-				node.getComplexityCounter());
+		assertEquals(CounterImpl.getInstance(0, 2), node.getComplexityCounter());
 	}
 }

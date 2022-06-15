@@ -1,14 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2021 Mountainminds GmbH & Co. KG and Contributors
- * This program and the accompanying materials are made available under
- * the terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0
- *
- * SPDX-License-Identifier: EPL-2.0
+ * Copyright (c) 2009, 2019 Mountainminds GmbH & Co. KG and Contributors
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
  *    Marc R. Hoffmann - initial API and implementation
- *
+ *    
  *******************************************************************************/
 package org.jacoco.report.internal.html.resources;
 
@@ -47,7 +46,7 @@ public class Resources {
 
 	/**
 	 * Attaches resources to the report with the given root folder.
-	 *
+	 * 
 	 * @param root
 	 *            root folder of the report
 	 */
@@ -57,7 +56,7 @@ public class Resources {
 
 	/**
 	 * Returns a relative link to a static resource.
-	 *
+	 * 
 	 * @param base
 	 *            base folder from where the link should be created
 	 * @param name
@@ -70,7 +69,7 @@ public class Resources {
 
 	/**
 	 * Determines the style sheet class for the given element type.
-	 *
+	 * 
 	 * @param type
 	 *            type of the element
 	 * @return style class name
@@ -95,7 +94,7 @@ public class Resources {
 
 	/**
 	 * Copies all static resources into the report.
-	 *
+	 * 
 	 * @throws IOException
 	 *             if the resources can't be written to the report
 	 */
