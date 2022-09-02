@@ -58,7 +58,9 @@ license {
 
 java_library {
     name: "jacocoagent",
+    host_supported: true,
     installable: true,
+    manifest: "org.jacoco.agent/src/MANIFEST.MF",
 
     apex_available: [
         "//apex_available:anyapex",
@@ -79,12 +81,16 @@ java_library {
     // system apps.
     // Note: we still may need to update the source code to cut dependencies in
     // mandatory jacoco classes.
-    exclude_srcs: [
-        "org.jacoco.core/src/org/jacoco/core/runtime/ModifiedSystemClassRuntime.java",
-        "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/PreMain.java",
-        "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/CoverageTransformer.java",
-        "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
-    ],
+    target: {
+        android: {
+            exclude_srcs: [
+                "org.jacoco.core/src/org/jacoco/core/runtime/ModifiedSystemClassRuntime.java",
+                "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/PreMain.java",
+                "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/CoverageTransformer.java",
+                "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
+            ],
+        },
+    },
 
     // In order to include Jacoco in core libraries, we cannot depend on
     // anything in the bootclasspath (or we would create dependency cycle).
