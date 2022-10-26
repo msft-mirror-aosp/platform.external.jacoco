@@ -105,6 +105,12 @@ java_library {
         "asm-commons-9.2",
         "asm-tree-9.2",
     ],
+    errorprone: {
+        javacflags: [
+            "-Xep:EqualsHashCode:WARN",
+            "-Xep:ReturnValueIgnored:WARN",
+        ],
+    },
 }
 
 // Generates stubs containing the classes that will be referenced by instrumented bytecode.
@@ -167,6 +173,12 @@ java_library_host {
         "args4j-2.0.28",
     ],
 
+    errorprone: {
+        javacflags: [
+            "-Xep:EqualsHashCode:WARN",
+            "-Xep:ReturnValueIgnored:WARN",
+        ],
+    },
 }
 
 java_library_host {
