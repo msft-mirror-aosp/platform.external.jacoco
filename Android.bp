@@ -105,6 +105,12 @@ java_library {
         "asm-commons-9.2",
         "asm-tree-9.2",
     ],
+    errorprone: {
+        javacflags: [
+            "-Xep:EqualsHashCode:WARN",
+            "-Xep:ReturnValueIgnored:WARN",
+        ],
+    },
 }
 
 // Generates stubs containing the classes that will be referenced by instrumented bytecode.
@@ -133,14 +139,31 @@ java_library_host {
     manifest: "org.jacoco.cli/src/MANIFEST.MF",
 
     srcs: [
-        "org.jacoco.core/src/**/*.java",
-        "org.jacoco.report/src/**/*.java",
         "org.jacoco.cli/src/**/*.java",
+    ],
+
+    static_libs: [
+        "jacoco-report",
+        "jacoco-core",
+    ],
+
+    dist: {
+        targets: [
+            "dist_files",
+            "apps_only",
+        ],
+    },
+}
+
+java_library_host {
+    name: "jacoco-core",
+
+    srcs: [
+        "org.jacoco.core/src/**/*.java",
     ],
 
     java_resource_dirs: [
         "org.jacoco.core/src",
-        "org.jacoco.report/src",
     ],
 
     static_libs: [
@@ -150,10 +173,26 @@ java_library_host {
         "args4j-2.0.28",
     ],
 
-    dist: {
-        targets: [
-            "dist_files",
-            "apps_only",
+    errorprone: {
+        javacflags: [
+            "-Xep:EqualsHashCode:WARN",
+            "-Xep:ReturnValueIgnored:WARN",
         ],
     },
+}
+
+java_library_host {
+    name: "jacoco-report",
+
+    srcs: [
+        "org.jacoco.report/src/**/*.java",
+    ],
+
+    java_resource_dirs: [
+        "org.jacoco.report/src",
+    ],
+
+    static_libs: [
+        "jacoco-core",
+    ],
 }
