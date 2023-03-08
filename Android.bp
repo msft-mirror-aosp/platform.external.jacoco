@@ -90,6 +90,14 @@ java_library {
                 "org.jacoco.agent.rt/src/org/jacoco/agent/rt/internal/JmxRegistration.java",
             ],
         },
+        host: {
+            dist: {
+                targets: [
+                    "dist_files",
+                    "apps_only",
+                ],
+            },
+        }
     },
 
     // In order to include Jacoco in core libraries, we cannot depend on
@@ -153,6 +161,9 @@ java_library_host {
             "apps_only",
         ],
     },
+
+    // b/267831518: Pin tradefed and dependencies to Java 11.
+    java_version: "11",
 }
 
 java_library_host {
@@ -173,6 +184,9 @@ java_library_host {
         "args4j-2.0.28",
     ],
 
+    // b/267831518: Pin tradefed and dependencies to Java 11.
+    java_version: "11",
+
     errorprone: {
         javacflags: [
             "-Xep:EqualsHashCode:WARN",
@@ -187,6 +201,9 @@ java_library_host {
     srcs: [
         "org.jacoco.report/src/**/*.java",
     ],
+
+    // b/267831518: Pin tradefed and dependencies to Java 11.
+    java_version: "11",
 
     java_resource_dirs: [
         "org.jacoco.report/src",
